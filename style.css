@@ -78,7 +78,6 @@ body {
     filter: blur(2px);
 }
 
-/* Glass Card */
 .content-card {
     background: var(--glass);
     backdrop-filter: blur(15px);
@@ -86,10 +85,28 @@ body {
     border-radius: 24px;
     padding: 3rem;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    max-width: 1000px;
-    width: 100%;
+    max-width: 1100px;
+    width: 95%;
+    max-height: 85vh;
+    /* Ensure it fits the screen height */
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    /* Enable scrolling if content overflows */
+    overflow-x: hidden;
+}
+
+/* Custom clear scrollbar for the card */
+.content-card::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content-card::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.content-card::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .content-card::before {
