@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض منظومة Bus App - وزارة النقل</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="logo-container">
+        <div class="badge">نظام وطني</div>
+        <div class="logo-text">BUS APP</div>
+    </div>
+
+    <!-- Speaker Notes Toggle -->
+    <div class="speaker-notes-toggle" id="notesToggle" title="إظهار ملاحظات المتحدث (N)">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <!-- Speaker Notes Panel -->
+    <div class="speaker-notes-panel" id="notesPanel">
+        <div class="speaker-notes-content" id="notesContent">
+            <!-- Notes populated by JS -->
+        </div>
+    </div>
+
+    <!-- Impact Modal Overlay -->
+    <div class="impact-overlay" id="impactOverlay">
+        <div class="impact-card">
+            <div class="close-impact" id="closeImpact">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="impact-header">
+                <h3 id="impactTitle">اسم الجهة</h3>
+            </div>
+            <div class="impact-grid">
+                <div class="impact-column pain">
+                    <h4><i class="fas fa-exclamation-triangle"></i> المعاناة الحالية</h4>
+                    <ul id="impactPain"></ul>
+                </div>
+                <div class="impact-column causes">
+                    <h4><i class="fas fa-random"></i> أثر العشوائية</h4>
+                    <ul id="impactCauses"></ul>
+                </div>
+                <div class="impact-column solutions">
+                    <h4><i class="fas fa-check-circle"></i> الحل الرقمي</h4>
+                    <ul id="impactSolutions"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="presentation-container">
+        <div class="background-overlay"></div>
+        <img src="hero.png" class="hero-bg" alt="Futuristic Transport">
+
+        <!-- Slide 1: Title -->
+        <div class="slide active" id="slide1">
+            <div class="content-card" style="text-align: center;">
+                <p style="color: var(--gold); font-weight: bold; font-size: 1.8rem; margin-bottom: 0.5rem;">رؤية
+                    استراتيجية لمستقبل متصل</p>
+                <h1>نحو حوكمة رقمية لقطاع النقل البري<br><span class="gold-text">منظومة Bus App</span></h1>
+                <p>نموذج وطني مطور محلياً لتحسين الكفاءة وتوفير الموارد</p>
+                <div style="margin-top: 3rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
+                    <p style="font-size: 1.1rem;">مقدمة إلى معالي وزير النقل ومستشاريه</p>
+                    <p style="font-size: 1rem; opacity: 0.7;">2026</p>
+                </div>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "معالي الوزير المحترم، والسادة المستشارون… السلام عليكم ورحمة الله. يسعدني وصاحب الشركة أن نقدم لكم
+                اليوم منظومة Bus App، مشروع وطني مطور محلياً بتقنيات عالمية، يهدف إلى نقل قطاع النقل البري بين المحافظات
+                من حالة العشوائية الورقية إلى حوكمة رقمية كاملة."
+            </div>
+        </div>
+
+        <!-- Slide 2: Crisis -->
+        <div class="slide" id="slide2">
+            <div class="content-card">
+                <h2>المعضلة الراهنة: فجوة البيانات</h2>
+                <ul>
+                    <li>فوضى تنظيمية وازدحام دائم في الكراجات المركزية</li>
+                    <li>غياب كامل للبيانات الرقمية والاعتماد على السجلات الورقية</li>
+                    <li>تعتيم مالي وتشغيلي يمنع الدولة من التخطيط الاستراتيجي</li>
+                    <li>هدر يومي لوقت وجهد المواطن في رحلة البحث عن رحلة</li>
+                </ul>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "معالي الوزير، قطاع النقل بين المحافظات – رغم أهميته الاستراتيجية – لا يزال يُدار بآليات القرن الماضي.
+                المواطن يذهب إلى الكراج دون أن يعرف هل توجد رحلة أم لا، والشركات تسجل كل شيء على أوراق تُفقد أو تُتلاعب
+                بها. هذا يؤدي إلى هدر هائل في الوقت والموارد، ويحرم الوزارة من أي رؤية بيانية حقيقية للحركة اليومية."
+            </div>
+        </div>
+
+        <!-- Slide 3: Solution -->
+        <div class="slide" id="slide3">
+            <div class="content-card">
+                <h2>الرؤية الاستراتيجية: التحول المؤسسي</h2>
+                <p>اضغط على أي طرف لاستكشاف أثر المنظومة عليه:</p>
+                <div class="diagram-container">
+                    <div class="clickable-node" onclick="showImpact('citizen')">
+                        <div class="node">
+                            <i class="fas fa-user"></i>
+                            <span>المواطن</span>
+                        </div>
+                    </div>
+                    <div class="connector" style="width: 20%; left: 25%;"></div>
+                    <div class="clickable-node" onclick="showImpact('state')">
+                        <div class="node" style="border-color: var(--gold);">
+                            <i class="fas fa-landmark"></i>
+                            <span>وزارة النقل</span>
+                        </div>
+                    </div>
+                    <div class="connector" style="width: 20%; right: 25%;"></div>
+                    <div class="clickable-node" onclick="showImpact('company')">
+                        <div class="node">
+                            <i class="fas fa-building"></i>
+                            <span>شركات النقل</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "لم نأتِ بعرض تطبيق حجز تقليدي. جئنا بمنظومة إدارة مؤسسية متكاملة تحول القطاع من العشوائية إلى الحوكمة
+                الرقمية. المنظومة تربط المواطن والشركة والوزارة في منصة واحدة. اطلب من معاليكم النقر على أي من الأطراف
+                الظاهرة لرؤية كيف سيتغير واقعهم تماماً مع Bus App."
+            </div>
+        </div>
+
+        <!-- Slide 4: Technology -->
+        <div class="slide" id="slide4">
+            <div class="content-card">
+                <h2>التقنيات والميزات الميدانية</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3>إدارة العمليات</h3>
+                        <ul>
+                            <li>إدارة الأسطول والسائقين والمسارات</li>
+                            <li>نطام حجوزات متطور (عام + موظفين)</li>
+                            <li>دعم العمل في ظروف الإنترنت الضعيفة</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>التجهيزات الميدانية</h3>
+                        <ul>
+                            <li>طباعة تذاكر حرارية فورية (Bluetooth)</li>
+                            <li>تفتيش ذكي عبر رموز QR لمنع التزوير</li>
+                            <li>لوحات تحكم ذكية لمراقبة الأداء</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "Bus App مبرمج بأحدث المعايير العالمية. يغطي كامل دورة العملية: من إدخال الباص والسائق وتعريف المسار،
+                مروراً بحجز المواطن من المنزل، وصولاً إلى طباعة التذكرة حرارياً في الكراج وتفتيشها إلكترونياً على الطريق
+                لمنع أي تلاعب."
+            </div>
+        </div>
+
+        <!-- Slide 5: Value for State -->
+        <div class="slide" id="slide5">
+            <div class="content-card">
+                <h2>القيمة المضافة للدولة والوزارة</h2>
+                <ul>
+                    <li><strong>أمن البيانات الوطنية:</strong> أرشفة إلكترونية لكل باص ورحلة ومسافر</li>
+                    <li><strong>الرقابة الفورية:</strong> تتبع حركة الأسطول والالتزام بالمعايير التشغيلية</li>
+                    <li><strong>التخطيط القائم على البيانات:</strong> قرارات مدروسة لتوزيع الباصات حسب الطلب</li>
+                    <li><strong>ضبط الموارد:</strong> ربط استهلاك الوقود بالمسافات المقطوعة فعلياً</li>
+                </ul>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "هنا تكمن القيمة الحقيقية لمعاليكم: تحول الوزارة من مراقب عاجز بسبب غياب البيانات إلى مسيطر رقمي كامل.
+                في أي لحظة يمكنكم معرفة عدد الباصات المتجهة إلى أي محافظة، وعدد الركاب الفعليين، وتحليل الطلب لاتخاذ
+                قرارات تخطيطية مدروسة."
+            </div>
+        </div>
+
+        <!-- Slide 6: Economy -->
+        <div class="slide" id="slide6">
+            <div class="content-card">
+                <h2>الأثر الاقتصادي وتوفير الموارد</h2>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; color: var(--text-secondary);">
+                    <tr style="background: var(--glass); color: var(--gold);">
+                        <th style="padding: 1rem; border: 1px solid var(--glass-border);">المستفيد</th>
+                        <th style="padding: 1rem; border: 1px solid var(--glass-border);">التوفير الرئيسي</th>
+                        <th style="padding: 1rem; border: 1px solid var(--glass-border);">الأثر المتوقع</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">المواطن</td>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">وقت وتكاليف الانتقال للبحث
+                        </td>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">راحة وإنتاجية أعلى</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">شركات النقل</td>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">منع التلاعب بالإيرادات</td>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">ربحية واستدامة</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">الدولة</td>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">تنظيم الكراجات ومنع الفوضى
+                        </td>
+                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">رفع الإنتاجية الكلية</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "من المنظور الاقتصادي الأكاديمي، كل ساعة يضيعها المواطن في الكراج هي ساعة تُطرح من الناتج المحلي. Bus
+                App يقلل التكاليف المخفية للنقل على ثلاثة مستويات: المواطن، الشركة، والدولة."
+            </div>
+        </div>
+
+        <!-- Slide 7: Commitment -->
+        <div class="slide" id="slide7">
+            <div class="content-card">
+                <h2>لماذا ستلتزم الشركات بالمنظومة؟</h2>
+                <ul>
+                    <li>حماية إيرادات الشركة من أي تلاعب "جباية" يدوي</li>
+                    <li>تقارير مالية وتدقيق آلي يوفر كلف الإدارة الورقية</li>
+                    <li>صورة احترافية تنافسية ترفع ثقة المواطن بالشركة</li>
+                    <li>دعم فني وطني مستمر وخيارات تطوير مخصصة</li>
+                </ul>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "قد يتبادر سؤال: كيف نجبر الشركات؟ الإجابة: لن نجبر… سنخلق الحاجة. النظام يحمي أموالهم ويوفر عليهم
+                الجهد. نحتاج فقط قراراً تنظيمياً من الوزارة يجعل المنظومة الرسمية الوحيدة المعتمدة."
+            </div>
+        </div>
+
+        <!-- Slide 8: Roadmap -->
+        <div class="slide" id="slide8">
+            <div class="content-card">
+                <h2>خارطة الطريق نحو الحل الوطني</h2>
+                <div style="display: flex; justify-content: space-between; gap: 1rem;">
+                    <div style="flex: 1; background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: var(--accent);">01. المرحلة التجريبية</h4>
+                        <p style="font-size: 1rem;">اختيار كراج/شركة واحدة لبدء العمل الميداني وتقييم الأثر لمدة شهرين.
+                        </p>
+                    </div>
+                    <div style="flex: 1; background: rgba(59, 130, 246, 0.2); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: var(--accent);">02. التنظيم والاعتماد</h4>
+                        <p style="font-size: 1rem;">ربط تراخيص شركات النقل بوجود حساب مفعل على المنظومة الوطنية.</p>
+                    </div>
+                    <div style="flex: 1; background: rgba(59, 130, 246, 0.3); padding: 1.5rem; border-radius: 12px;">
+                        <h4 style="color: var(--gold);">03. السيادة الرقمية</h4>
+                        <p style="font-size: 1rem;">دمج قاعدة البيانات مع الوزارة لتصبح المرجع الرسمي لحركة النقل.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "نقترح بدءاً بمشروع تجريبي ناجح، ثم ربط الترخيص السنوي بالمنظومة، وأخيراً دمج البيانات مع الوزارة لتصبح
+                ملكاً وطنياً."
+            </div>
+        </div>
+
+        <!-- Slide 9: Conclusion -->
+        <div class="slide" id="slide9">
+            <div class="content-card" style="text-align: center;">
+                <h2>الخلاصة</h2>
+                <p style="font-size: 2rem; color: var(--gold); margin: 3rem 0;">من "التخبط الورقي" إلى "الحوكمة الرقمية
+                    المؤسسية"</p>
+                <p>Bus App: بنية تحتية رقمية وطنية جاهزة لخدمة الوطن.</p>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                "معالي الوزير، Bus App هو الحل الذي يحتاجه قطاع النقل ليواكب القرن الحادي والعشرين. نحن لا نطلب
+                استثماراً مالياً كبيراً… نطلب قراراً تنظيمياً وتوجيهياً لاعتماده كنموذج وطني. نحن جاهزون للتنفيذ
+                والتطوير المستمر."
+            </div>
+        </div>
+
+        <!-- Slide 10: Ending -->
+        <div class="slide" id="slide10">
+            <div class="content-card" style="text-align: center;">
+                <h1>شكراً لمعاليكم</h1>
+                <p>نحن في خدمتكم لأي توضيح أو عرض تجريبي فوري</p>
+                <div style="margin-top: 4rem;">
+                    <div
+                        style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        QR</div>
+                    <p style="font-size: 1rem; margin-top: 1rem;">المسح للتجربة</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="prevSlide()">السابق</button>
+            <button class="nav-btn" onclick="nextSlide()">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+        let notesVisible = false;
+
+        const roleData = {
+            citizen: {
+                title: 'أثر المنظومة على المواطن',
+                pain: ['وقت انتظار طويل وغير مؤكد', 'عشوائية في الأسعار والمواصفات', 'انعدام الراحة والأمان في الكراجات'],
+                causes: ['الازدحام والتدافع العشوائي', 'الاستغلال المادي من السماسرة'],
+                solutions: ['حجز فوري من المنزل بلمسة واحدة', 'أسعار رسمية ثابتة وشفافة', 'معرفة دقيقة بمواعيد الانطلاق والوصول']
+            },
+            company: {
+                title: 'أثر المنظومة على شركات النقل',
+                pain: ['سرقة "الجباية" المتكررة وصعوبة التدقيق', 'غياب البيانات الإحصائية للرحلات', 'صعوبة تتبع أداء السائقين'],
+                causes: ['خسائر مالية كبيرة وتدني الأرباح', 'صعوبة التخطيط للتوسع في الأسطول'],
+                solutions: ['تتبع مالي وإيرادات موثقة لحظة بلحظة', 'تقارير أداء ذكية لرفع الكفاءة التشغيلية', 'إدارة متكاملة للحافلات والسائقين رقمياً']
+            },
+            state: {
+                title: 'أثر المنظومة على وزارة النقل (الدولة)',
+                pain: ['غياب الرؤية البيانية عن قطاع النقل', 'صعوبة الرقابة على التزام الشركات', 'هدر الموارد والدعم الحكومي'],
+                causes: ['عدم القدرة على التخطيط الاستراتيجي', 'استياء المواطنين من جودة الخدمات العامة'],
+                solutions: ['أرشيف وطني موحد لحركة النقل والركاب', 'رقابة مركزية وفورية على جميع الخطوط', 'قرارات تخطيطية مبنية على حقائق وبيانات']
+            }
+        };
+
+        function showImpact(role) {
+            const data = roleData[role];
+            document.getElementById('impactTitle').innerText = data.title;
+            document.getElementById('impactPain').innerHTML = data.pain.map(i => `<li>${i}</li>`).join('');
+            document.getElementById('impactCauses').innerHTML = data.causes.map(i => `<li>${i}</li>`).join('');
+            document.getElementById('impactSolutions').innerHTML = data.solutions.map(i => `<li>${i}</li>`).join('');
+
+            document.getElementById('impactOverlay').classList.add('active');
+        }
+
+        document.getElementById('closeImpact').addEventListener('click', () => {
+            document.getElementById('impactOverlay').classList.remove('active');
+        });
+
+        function updateSlide() {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            const activeSlide = document.getElementById('slide' + currentSlide);
+            activeSlide.classList.add('active');
+
+            // Update Speaker Notes
+            const noteData = activeSlide.querySelector('.speaker-note-data');
+            document.getElementById('notesContent').innerHTML = noteData ? noteData.innerText : 'لا توجد ملاحظات لهذه الشريحة.';
+
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function toggleNotes() {
+            notesVisible = !notesVisible;
+            document.getElementById('notesPanel').classList.toggle('visible', notesVisible);
+        }
+
+        document.getElementById('notesToggle').addEventListener('click', toggleNotes);
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') nextSlide();
+            if (e.key.toLowerCase() === 'n') toggleNotes();
+            if (e.key === 'Escape') document.getElementById('impactOverlay').classList.remove('active');
+        });
+
+        updateSlide();
+    </script>
+</body>
+
+</html>
