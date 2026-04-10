@@ -274,10 +274,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Fullscreen Toggle ──
     window.toggleFullscreen = function () {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => { });
+        const doc = document.documentElement;
+        const isFull = document.fullscreenElement || 
+                       document.webkitFullscreenElement || 
+                       document.mozFullScreenElement || 
+                       document.msFullscreenElement;
+
+        if (!isFull) {
+            const request = doc.requestFullscreen || 
+                            doc.webkitRequestFullscreen || 
+                            doc.mozRequestFullScreen || 
+                            doc.msRequestFullscreen;
+            if (request) {
+                request.call(doc).catch(err => {
+                    console.warn(`Fullscreen request failed: ${err.message}`);
+                });
+            } else {
+                alert("Fullscreen API is not supported in this browser.");
+            }
         } else {
-            document.exitFullscreen();
+            const exit = document.exitFullscreen || 
+                         document.webkitExitFullscreen || 
+                         document.mozCancelFullScreen || 
+                         document.msExitFullscreen;
+            if (exit) {
+                exit.call(document).catch(() => {});
+            }
         }
     };
 
