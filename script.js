@@ -273,35 +273,62 @@ document.addEventListener('DOMContentLoaded', () => {
     notesToggle?.addEventListener('click', toggleNotes);
 
     // ── Fullscreen Toggle ──
-    window.toggleFullscreen = function () {
-        const doc = document.documentElement;
-        const isFull = document.fullscreenElement || 
-                       document.webkitFullscreenElement || 
-                       document.mozFullScreenElement || 
-                       document.msFullscreenElement;
+    // ── Fullscreen Toggle ──
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', () => {
+            console.log("Fullscreen button clicked");
+            const doc = document.documentElement;
+            const isFull = document.fullscreenElement || 
+                           document.webkitFullscreenElement || 
+                           document.mozFullScreenElement || 
+                           document.msFullscreenElement;
 
-        if (!isFull) {
-            const request = doc.requestFullscreen || 
-                            doc.webkitRequestFullscreen || 
-                            doc.mozRequestFullScreen || 
-                            doc.msRequestFullscreen;
-            if (request) {
-                request.call(doc).catch(err => {
-                    console.warn(`Fullscreen request failed: ${err.message}`);
-                });
+            if (!isFull) {
+                const request = doc.requestFullscreen || 
+                                doc.webkitRequestFullscreen || 
+                                doc.mozRequestFullScreen || 
+                                doc.msRequestFullscreen;
+                if (request) {
+                    request.call(doc)
+                        .then(() => {
+                            console.log("Fullscreen enabled successfully");
+                            fullscreenBtn.querySelector('i').className = 'fas fa-compress';
+                        })
+                        .catch(err => {
+                            console.error(`Fullscreen request failed: ${err.message} (${err.name})`);
+                            alert("حدث خطأ أثناء محاولة تكبير الشاشة: " + err.message);
+                        });
+                } else {
+                    alert("Fullscreen API is not supported in this browser.");
+                }
             } else {
-                alert("Fullscreen API is not supported in this browser.");
+                const exit = document.exitFullscreen || 
+                             document.webkitExitFullscreen || 
+                             document.mozCancelFullScreen || 
+                             document.msExitFullscreen;
+                if (exit) {
+                    exit.call(document)
+                        .then(() => {
+                            fullscreenBtn.querySelector('i').className = 'fas fa-expand';
+                        })
+                        .catch(() => {});
+                }
             }
-        } else {
-            const exit = document.exitFullscreen || 
-                         document.webkitExitFullscreen || 
-                         document.mozCancelFullScreen || 
-                         document.msExitFullscreen;
-            if (exit) {
-                exit.call(document).catch(() => {});
-            }
+        });
+    }
+
+    // Handle ESC key or manual exit to update icon
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && fullscreenBtn) {
+            fullscreenBtn.querySelector('i').className = 'fas fa-expand';
         }
-    };
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+        if (!document.webkitFullscreenElement && fullscreenBtn) {
+            fullscreenBtn.querySelector('i').className = 'fas fa-expand';
+        }
+    });
 
     // ── Keyboard Navigation ──
     document.addEventListener('keydown', (e) => {
