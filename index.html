@@ -82,12 +82,24 @@
         <div class="slide" id="slide2">
             <div class="content-card">
                 <h2>المعضلة الراهنة: فجوة البيانات</h2>
-                <ul>
-                    <li>فوضى تنظيمية وازدحام دائم في الكراجات المركزية</li>
-                    <li>غياب كامل للبيانات الرقمية والاعتماد على السجلات الورقية</li>
-                    <li>تعتيم مالي وتشغيلي يمنع الدولة من التخطيط الاستراتيجي</li>
-                    <li>هدر يومي لوقت وجهد المواطن في رحلة البحث عن رحلة</li>
-                </ul>
+                <div class="pain-grid">
+                    <div class="pain-card">
+                        <h3><i class="fas fa-users-slash"></i> فوضى تنظيمية</h3>
+                        <p>ازدحام دائم في الكراجات وتخبط في مسارات الباصات.</p>
+                    </div>
+                    <div class="pain-card">
+                        <h3><i class="fas fa-file-excel"></i> عشوائية ورقية</h3>
+                        <p>غياب كامل للبيانات الرقمية والاعتماد على دفاتر قابلة للتلف.</p>
+                    </div>
+                    <div class="pain-card">
+                        <h3><i class="fas fa-eye-slash"></i> تعتيم تشغيلي</h3>
+                        <p>الدولة لا تعلم حجم الأسطول الفعلي أو عدد المسافرين يومياً.</p>
+                    </div>
+                    <div class="pain-card">
+                        <h3><i class="fas fa-hourglass-half"></i> هدر أوقات المواطنين</h3>
+                        <p>ساعات انتظار طويلة للمواطن دون أي تأكيدات لوقت الانطلاق.</p>
+                    </div>
+                </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
                 "معالي الوزير، قطاع النقل بين المحافظات – رغم أهميته الاستراتيجية – لا يزال يُدار بآليات القرن الماضي.
@@ -135,22 +147,23 @@
         <div class="slide" id="slide4">
             <div class="content-card">
                 <h2>التقنيات والميزات الميدانية</h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                    <div>
-                        <h3>إدارة العمليات</h3>
-                        <ul>
-                            <li>إدارة الأسطول والسائقين والمسارات</li>
-                            <li>نطام حجوزات متطور (عام + موظفين)</li>
-                            <li>دعم العمل في ظروف الإنترنت الضعيفة</li>
-                        </ul>
+                <p>اضغط على أي تقنية لتجربتها:</p>
+                <div class="tech-grid">
+                    <div class="tech-box" onclick="simulateScan(this)">
+                        <div class="scan-line"></div>
+                        <i class="fas fa-qrcode"></i>
+                        <h3>تفتيش ذكي (QR)</h3>
+                        <p style="font-size: 1rem; margin-top: 1rem;">حماية الرحلات من الركاب غير المسجلين</p>
                     </div>
-                    <div>
-                        <h3>التجهيزات الميدانية</h3>
-                        <ul>
-                            <li>طباعة تذاكر حرارية فورية (Bluetooth)</li>
-                            <li>تفتيش ذكي عبر رموز QR لمنع التزوير</li>
-                            <li>لوحات تحكم ذكية لمراقبة الأداء</li>
-                        </ul>
+                    <div class="tech-box" onclick="this.style.transform='scale(1.05)'; setTimeout(()=>this.style.transform='', 300)">
+                        <i class="fas fa-print"></i>
+                        <h3>طباعة حرارية فورية</h3>
+                        <p style="font-size: 1rem; margin-top: 1rem;">تذاكر رسمية عبر البلوتوث للسائق</p>
+                    </div>
+                    <div class="tech-box" onclick="this.style.transform='scale(1.05)'; setTimeout(()=>this.style.transform='', 300)">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>لوحات تحكم (Dashboards)</h3>
+                        <p style="font-size: 1rem; margin-top: 1rem;">مراقبة حية للأداء والأموال</p>
                     </div>
                 </div>
             </div>
@@ -165,12 +178,34 @@
         <div class="slide" id="slide5">
             <div class="content-card">
                 <h2>القيمة المضافة للدولة والوزارة</h2>
-                <ul>
-                    <li><strong>أمن البيانات الوطنية:</strong> أرشفة إلكترونية لكل باص ورحلة ومسافر</li>
-                    <li><strong>الرقابة الفورية:</strong> تتبع حركة الأسطول والالتزام بالمعايير التشغيلية</li>
-                    <li><strong>التخطيط القائم على البيانات:</strong> قرارات مدروسة لتوزيع الباصات حسب الطلب</li>
-                    <li><strong>ضبط الموارد:</strong> ربط استهلاك الوقود بالمسافات المقطوعة فعلياً</li>
-                </ul>
+                <p>مقارنة مستوى الرقابة والإيرادات والانضباط قبل وبعد المنظومة:</p>
+                <div class="chart-container" id="stateChart">
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" data-height="15" style="background: rgba(255,255,255,0.1);">
+                            <div class="chart-value">15%</div>
+                        </div>
+                        <div class="chart-label">الرقابة سابقاً</div>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar success" data-height="95">
+                            <div class="chart-value">95%</div>
+                        </div>
+                        <div class="chart-label">الرقابة مع Bus App</div>
+                    </div>
+                    <div class="chart-bar-wrapper"></div> <!-- Spacer -->
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" data-height="30" style="background: rgba(255,255,255,0.1);">
+                            <div class="chart-value">30%</div>
+                        </div>
+                        <div class="chart-label">كفاءة التخطيط</div>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar gold" data-height="98">
+                            <div class="chart-value">98%</div>
+                        </div>
+                        <div class="chart-label">التخطيط الرقمي</div>
+                    </div>
+                </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
                 "هنا تكمن القيمة الحقيقية لمعاليكم: تحول الوزارة من مراقب عاجز بسبب غياب البيانات إلى مسيطر رقمي كامل.
@@ -183,30 +218,23 @@
         <div class="slide" id="slide6">
             <div class="content-card">
                 <h2>الأثر الاقتصادي وتوفير الموارد</h2>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; color: var(--text-secondary);">
-                    <tr style="background: var(--glass); color: var(--gold);">
-                        <th style="padding: 1rem; border: 1px solid var(--glass-border);">المستفيد</th>
-                        <th style="padding: 1rem; border: 1px solid var(--glass-border);">التوفير الرئيسي</th>
-                        <th style="padding: 1rem; border: 1px solid var(--glass-border);">الأثر المتوقع</th>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">المواطن</td>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">وقت وتكاليف الانتقال للبحث
-                        </td>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">راحة وإنتاجية أعلى</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">شركات النقل</td>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">منع التلاعب بالإيرادات</td>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">ربحية واستدامة</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">الدولة</td>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">تنظيم الكراجات ومنع الفوضى
-                        </td>
-                        <td style="padding: 1rem; border: 1px solid var(--glass-border);">رفع الإنتاجية الكلية</td>
-                    </tr>
-                </table>
+                <div class="counter-grid">
+                    <div class="counter-box">
+                        <i class="fas fa-user-clock" style="font-size: 2rem; color: var(--text-secondary);"></i>
+                        <div class="counter-value" data-target="2.5">0</div>
+                        <div class="counter-label">مليون ساعة يتم هدرها سنوياً ستوفر للمواطنين</div>
+                    </div>
+                    <div class="counter-box" style="border-top-color: var(--success);">
+                        <i class="fas fa-coins" style="font-size: 2rem; color: var(--text-secondary);"></i>
+                        <div class="counter-value" data-target="30" style="color: var(--success);"><span style="font-size: 2rem;">%</span>0</div>
+                        <div class="counter-label">متوسط الزيادة في رقابة الشركات على إيراداتها المالية</div>
+                    </div>
+                    <div class="counter-box" style="border-top-color: var(--accent);">
+                        <i class="fas fa-gas-pump" style="font-size: 2rem; color: var(--text-secondary);"></i>
+                        <div class="counter-value" data-target="100" style="color: var(--accent);"><span style="font-size: 2rem;">%</span>0</div>
+                        <div class="counter-label">من بيانات الرحلات تصبح أرشفة وطنية دقيقة</div>
+                    </div>
+                </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
                 "من المنظور الاقتصادي الأكاديمي، كل ساعة يضيعها المواطن في الكراج هي ساعة تُطرح من الناتج المحلي. Bus
@@ -218,12 +246,29 @@
         <div class="slide" id="slide7">
             <div class="content-card">
                 <h2>لماذا ستلتزم الشركات بالمنظومة؟</h2>
-                <ul>
-                    <li>حماية إيرادات الشركة من أي تلاعب "جباية" يدوي</li>
-                    <li>تقارير مالية وتدقيق آلي يوفر كلف الإدارة الورقية</li>
-                    <li>صورة احترافية تنافسية ترفع ثقة المواطن بالشركة</li>
-                    <li>دعم فني وطني مستمر وخيارات تطوير مخصصة</li>
-                </ul>
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
+                    <div class="pain-card" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 4px solid var(--gold);">
+                        <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--gold);"></i>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">حماية الإيرادات (المانع للتلاعب)</h3>
+                            <p style="margin: 0;">يوقف فوراً ظاهرة "الجباية" اليدوية خارج الصندوق المالي للشركة.</p>
+                        </div>
+                    </div>
+                    <div class="pain-card" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 4px solid var(--accent);">
+                        <i class="fas fa-chart-pie" style="font-size: 2.5rem; color: var(--accent);"></i>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">أتمتة وحوكمة إدارية</h3>
+                            <p style="margin: 0;">تقارير مالية وتدقيق آلي دقيق يوفر مئات الساعات من الإدارة الورقية.</p>
+                        </div>
+                    </div>
+                    <div class="pain-card" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 4px solid var(--success);">
+                        <i class="fas fa-award" style="font-size: 2.5rem; color: var(--success);"></i>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">صورة احترافية وتنافسية</h3>
+                            <p style="margin: 0;">الشركة التي تستخدم الحجز الإلكتروني تكتسب ثقة وراحة الركاب فوراً.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
                 "قد يتبادر سؤال: كيف نجبر الشركات؟ الإجابة: لن نجبر… سنخلق الحاجة. النظام يحمي أموالهم ويوفر عليهم
@@ -235,19 +280,27 @@
         <div class="slide" id="slide8">
             <div class="content-card">
                 <h2>خارطة الطريق نحو الحل الوطني</h2>
-                <div style="display: flex; justify-content: space-between; gap: 1rem;">
-                    <div style="flex: 1; background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 12px;">
-                        <h4 style="color: var(--accent);">01. المرحلة التجريبية</h4>
-                        <p style="font-size: 1rem;">اختيار كراج/شركة واحدة لبدء العمل الميداني وتقييم الأثر لمدة شهرين.
-                        </p>
+                <div class="timeline">
+                    <div class="timeline-item active" onclick="activateTimeline(this)">
+                        <div class="timeline-dot">01</div>
+                        <div class="timeline-content">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem;">المرحلة التجريبية</h4>
+                            <p style="font-size: 1rem;">تشغيل تجريبي في كراج رئيسي مع شركة محددة لتقييم الأثر المباشر لـ 60 يوماً.</p>
+                        </div>
                     </div>
-                    <div style="flex: 1; background: rgba(59, 130, 246, 0.2); padding: 1.5rem; border-radius: 12px;">
-                        <h4 style="color: var(--accent);">02. التنظيم والاعتماد</h4>
-                        <p style="font-size: 1rem;">ربط تراخيص شركات النقل بوجود حساب مفعل على المنظومة الوطنية.</p>
+                    <div class="timeline-item" onclick="activateTimeline(this)">
+                        <div class="timeline-dot">02</div>
+                        <div class="timeline-content">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem;">التنظيم والاعتماد</h4>
+                            <p style="font-size: 1rem;">إصدار تعميم وزاري يربط ترخيص النقل بوجود نظام إدارة آلي معتمد.</p>
+                        </div>
                     </div>
-                    <div style="flex: 1; background: rgba(59, 130, 246, 0.3); padding: 1.5rem; border-radius: 12px;">
-                        <h4 style="color: var(--gold);">03. السيادة الرقمية</h4>
-                        <p style="font-size: 1rem;">دمج قاعدة البيانات مع الوزارة لتصبح المرجع الرسمي لحركة النقل.</p>
+                    <div class="timeline-item" onclick="activateTimeline(this)">
+                        <div class="timeline-dot">03</div>
+                        <div class="timeline-content">
+                            <h4 style="color: var(--gold); margin-bottom: 0.5rem;">السيادة الرقمية</h4>
+                            <p style="font-size: 1rem;">ربط الأنظمة مركزياً مع الوزارة لاعتمادها "المرجع الوطني" لبيانات النقل.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -275,14 +328,12 @@
         <!-- Slide 10: Ending -->
         <div class="slide" id="slide10">
             <div class="content-card" style="text-align: center;">
-                <h1>شكراً لمعاليكم</h1>
-                <p>نحن في خدمتكم لأي توضيح أو عرض تجريبي فوري</p>
-                <div style="margin-top: 4rem;">
-                    <div
-                        style="width: 100px; height: 100px; background: var(--accent); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem;">
-                        QR</div>
-                    <p style="font-size: 1rem; margin-top: 1rem;">المسح للتجربة</p>
+                <h1 style="color: var(--gold);">جاهزون للانطلاق</h1>
+                <p>نحن في خدمتكم لأي توضيح أو لإجراء عرض ميداني حي</p>
+                <div class="qr-core" onclick="this.innerHTML='<i class=\'fas fa-check-circle\' style=\'color: var(--success);\'></i>'; setTimeout(()=>this.innerHTML='QR', 2000);">
+                    QR
                 </div>
+                <p style="font-size: 1rem;">(Bus App System)</p>
             </div>
         </div>
 
@@ -341,8 +392,82 @@
             const noteData = activeSlide.querySelector('.speaker-note-data');
             document.getElementById('notesContent').innerHTML = noteData ? noteData.innerText : 'لا توجد ملاحظات لهذه الشريحة.';
 
+            // Trigger Animations for Slide 5 (Charts)
+            if(currentSlide === 5) {
+                setTimeout(() => {
+                    activeSlide.querySelectorAll('.chart-bar').forEach(bar => {
+                        bar.style.height = bar.getAttribute('data-height') + '%';
+                        bar.querySelector('.chart-value').style.opacity = '1';
+                    });
+                }, 300);
+            } else {
+                // Reset charts when leaving
+                document.querySelectorAll('.chart-bar').forEach(bar => {
+                    bar.style.height = '0%';
+                    bar.querySelector('.chart-value').style.opacity = '0';
+                });
+            }
+
+            // Trigger Animations for Slide 6 (Counters)
+            if(currentSlide === 6) {
+                activeSlide.querySelectorAll('.counter-value').forEach(counter => {
+                    const target = parseFloat(counter.getAttribute('data-target'));
+                    const duration = 2000; // ms
+                    const startTime = performance.now();
+                    const textNode = counter.childNodes[counter.childNodes.length - 1]; // get text part ignoring span
+
+                    function updateCounter(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        // Ease out cubic
+                        const easeProgress = 1 - Math.pow(1 - progress, 3);
+                        const currentVal = (target * easeProgress).toFixed(target % 1 === 0 ? 0 : 1);
+                        
+                        // Keep span if exists
+                        if(counter.querySelector('span')) {
+                            counter.innerHTML = counter.querySelector('span').outerHTML + currentVal;
+                        } else {
+                            counter.innerText = currentVal;
+                        }
+
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                             if(counter.querySelector('span')) {
+                                counter.innerHTML = counter.querySelector('span').outerHTML + target;
+                            } else {
+                                counter.innerText = target;
+                            }
+                        }
+                    }
+                    requestAnimationFrame(updateCounter);
+                });
+            }
+
             const progress = (currentSlide / totalSlides) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Tech Simulator Scan (Slide 4)
+        function simulateScan(el) {
+            el.classList.add('scanning');
+            setTimeout(() => {
+                el.classList.remove('scanning');
+                el.style.borderColor = 'var(--success)';
+                const icon = el.querySelector('i');
+                const oldClass = icon.className;
+                icon.className = 'fas fa-check-circle';
+                setTimeout(() => {
+                    icon.className = oldClass;
+                    el.style.borderColor = 'transparent';
+                }, 1500);
+            }, 2000);
+        }
+
+        // Timeline Activation (Slide 8)
+        function activateTimeline(el) {
+            document.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
         }
 
         function toggleNotes() {

@@ -467,3 +467,338 @@ li::before {
     font-size: 2.5rem;
     color: var(--gold);
 }
+
+/* =========================================
+   NEW WOW EDITION STYLES
+   ========================================= */
+
+/* Slide 2: Pain Cards & Glitch */
+.pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    width: 100%;
+}
+
+.pain-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--glass-border);
+    padding: 2rem;
+    border-radius: 16px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: crosshair;
+}
+
+.pain-card:hover {
+    border-color: var(--error);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+.pain-card:hover h3,
+.pain-card:hover p {
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+    color: var(--error-light, #F87171);
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0)
+    }
+
+    20% {
+        transform: translate(-2px, 2px)
+    }
+
+    40% {
+        transform: translate(-2px, -2px)
+    }
+
+    60% {
+        transform: translate(2px, 2px)
+    }
+
+    80% {
+        transform: translate(2px, -2px)
+    }
+
+    100% {
+        transform: translate(0)
+    }
+}
+
+/* Slide 4: Tech Stack Scanner */
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    text-align: center;
+}
+
+.tech-box {
+    background: var(--glass);
+    padding: 3rem 2rem;
+    border-radius: 24px;
+    border: 2px solid transparent;
+    transition: 0.4s;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.tech-box i {
+    font-size: 4rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    transition: 0.4s;
+}
+
+.tech-box:hover {
+    border-color: var(--success);
+    background: rgba(16, 185, 129, 0.1);
+    transform: translateY(-10px);
+}
+
+.tech-box:hover i {
+    color: var(--success);
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--success);
+    box-shadow: 0 0 15px var(--success);
+    opacity: 0;
+}
+
+.tech-box.scanning .scan-line {
+    animation: scanning 2s ease-in-out infinite;
+    opacity: 1;
+}
+
+@keyframes scanning {
+    0% {
+        top: 10%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 90%;
+        opacity: 0;
+    }
+}
+
+/* Slide 5: Live Bar Chart */
+.chart-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 300px;
+    width: 100%;
+    border-bottom: 2px solid var(--glass-border);
+    border-left: 2px solid var(--glass-border);
+    padding: 0 2rem;
+    margin-top: 3rem;
+}
+
+.chart-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 15%;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.chart-bar {
+    width: 100%;
+    background: var(--accent);
+    border-radius: 8px 8px 0 0;
+    height: 0;
+    /* Animated via JS or transition */
+    transition: height 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+.chart-bar.gold {
+    background: var(--gold);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+}
+
+.chart-bar.success {
+    background: var(--success);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+
+.chart-label {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+.chart-value {
+    position: absolute;
+    top: -30px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    opacity: 0;
+    transition: opacity 1s 1s;
+}
+
+/* Slide 6: Counter Boxes */
+.counter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.counter-box {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+    border: 1px solid var(--glass-border);
+    border-top: 4px solid var(--gold);
+    border-radius: 16px;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.counter-value {
+    font-size: 4.5rem;
+    font-weight: bold;
+    color: var(--gold);
+    line-height: 1;
+    margin: 1rem 0;
+}
+
+.counter-label {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+/* Slide 8: Timeline */
+.timeline {
+    position: relative;
+    max-width: 100%;
+    margin: 4rem auto 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+    background: var(--glass-border);
+    z-index: 1;
+}
+
+.timeline-item {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    width: 30%;
+    cursor: pointer;
+}
+
+.timeline-dot {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-light);
+    border: 4px solid var(--accent);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.timeline-item:hover .timeline-dot,
+.timeline-item.active .timeline-dot {
+    background: var(--accent);
+    transform: scale(1.2);
+    box-shadow: 0 0 20px var(--accent);
+}
+
+.timeline-content {
+    background: var(--glass);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    opacity: 0.5;
+    transform: translateY(20px);
+    transition: 0.5s;
+}
+
+.timeline-item:hover .timeline-content,
+.timeline-item.active .timeline-content {
+    opacity: 1;
+    transform: translateY(0);
+    border-color: var(--accent);
+}
+
+/* Slide 10: QR Core */
+.qr-core {
+    width: 200px;
+    height: 200px;
+    background: var(--glass);
+    border: 4px solid var(--accent);
+    border-radius: 24px;
+    margin: 3rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    position: relative;
+    cursor: pointer;
+}
+
+.qr-core::before,
+.qr-core::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 2px solid var(--accent);
+    border-radius: 30px;
+    animation: sonar 2s ease-out infinite;
+    opacity: 0;
+}
+
+.qr-core::after {
+    animation-delay: 1s;
+}
+
+@keyframes sonar {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
