@@ -1,10 +1,14 @@
 /* ============================================
    Bus App Presentation - Interactive Engine
+   ============================================
+   NOTE: All text content lives in content.js
+         This file handles only logic & behavior.
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
     // ── Configuration ──
-    const TOTAL_SLIDES = 16;
+    // TOTAL_SLIDES is derived dynamically from content.js
+    const TOTAL_SLIDES = (window.slidesData || []).length || 16;
     let currentSlide = 1;
     let notesVisible = false;
     let touchStartX = 0;
@@ -16,6 +20,329 @@ document.addEventListener('DOMContentLoaded', () => {
     const notesPanel = document.getElementById('notesPanel');
     const notesContent = document.getElementById('notesContent');
     const notesToggle = document.getElementById('notesToggle');
+    const slidesContainer = document.getElementById('slidesContainer');
+
+    // ══════════════════════════════════════════════════════════════
+    //  SlideRenderer — يُحوّل window.slidesData إلى HTML في الـ DOM
+    //  للتعديل على المحتوى: افتح content.js فقط
+    // ══════════════════════════════════════════════════════════════
+    class SlideRenderer {
+
+        /** نقطة الدخول الوحيدة: يمرر كل شريحة لمولّدها المناسب */
+        static renderAll(slides, container) {
+            if (!container || !slides?.length) return;
+            container.innerHTML = slides
+                .map((slide, idx) => SlideRenderer._buildSlide(slide, idx))
+                .join('');
+        }
+
+        static _buildSlide(slide, idx) {
+            const isFirst = idx === 0;
+            const builders = {
+                'title': SlideRenderer._title,
+                'about': SlideRenderer._about,
+                'pain': SlideRenderer._pain,
+                'benchmark': SlideRenderer._benchmark,
+                'strategic-vision': SlideRenderer._strategicVision,
+                'journey': SlideRenderer._journey,
+                'setup': SlideRenderer._setup,
+                'tech': SlideRenderer._tech,
+                'architecture': SlideRenderer._architecture,
+                'compliance': SlideRenderer._compliance,
+                'finance': SlideRenderer._finance,
+                'ask': SlideRenderer._ask,
+                'timeline': SlideRenderer._timeline,
+                'risks': SlideRenderer._risks,
+                'conclusion': SlideRenderer._conclusion,
+                'closing': SlideRenderer._closing,
+            };
+            const build = builders[slide.type];
+            const body = build ? build(slide.data) : `<div class="content-card"><p>نوع غير معروف: ${slide.type}</p></div>`;
+            const notes = slide.speakerNotes
+                ? `<div class="speaker-note-data" style="display:none;">${slide.speakerNotes}</div>`
+                : '';
+            return `<div class="slide${isFirst ? ' active' : ''}" id="slide${slide.id}">${body}${notes}</div>`;
+        }
+
+        // ─── مولّدات الأنواع ────────────────────────────────────────
+
+        static _title(d) {
+            return `
+            <div class="content-card text-center">
+                <p class="slide-republic anim" style="--anim-order:0">${d.republic}</p>
+                <h1 class="anim" style="--anim-order:1">${d.mainTitle}<br>
+                    <span class="gradient-text">${d.accentTitle}</span>
+                </h1>
+                <p class="anim" style="--anim-order:2">${d.description}</p>
+                <div class="slide-footer anim" style="--anim-order:3">
+                    <p class="presenter-name">${d.presenter}</p>
+                    <p class="date-text">${d.date}</p>
+                </div>
+            </div>`;
+        }
+
+        static _about(d) {
+            const cards = d.items.map((item, i) => `
+                <div class="about-card anim" style="--anim-order:${i + 1}">
+                    <i class="${item.icon}" style="color:${item.color};"></i>
+                    <div><h3>${item.title}</h3><p>${item.text}</p></div>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="about-grid">${cards}</div>
+                <div class="about-mission anim" style="--anim-order:${d.items.length + 1}">
+                    <p><i class="fas fa-bullseye" style="color:var(--gold);margin-left:.5rem;"></i>${d.mission}</p>
+                </div>
+            </div>`;
+        }
+
+        static _pain(d) {
+            const cards = d.items.map((item, i) => `
+                <div class="pain-card anim" style="--anim-order:${i + 1}">
+                    <h3><i class="${item.icon}"></i> ${item.title}</h3>
+                    <p>${item.text}</p>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="pain-grid pain-grid--3col">${cards}</div>
+            </div>`;
+        }
+
+        static _benchmark(d) {
+            const headerCells = d.headers.map(h => `<th>${h}</th>`).join('');
+            const rows = d.rows.map(row => `<tr>
+                <td>${row[0]}</td>
+                <td class="status-bad">${row[1]}</td>
+                <td>${row[2]}</td>
+                <td class="status-good">${row[3]}</td>
+            </tr>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <table class="benchmark-table anim" style="--anim-order:1">
+                    <thead><tr>${headerCells}</tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>`;
+        }
+
+        static _strategicVision(d) {
+            // Build node HTML
+            const nodeHtml = d.nodes.map(n => `
+                <div class="clickable-node" onclick="showImpact('${n.id}')">
+                    <div class="node${n.color === 'gold' ? ' node--gold' : ''} pulse">
+                        <i class="${n.icon}"></i><span>${n.label}</span>
+                    </div>
+                </div>`).join('');
+
+            // Build connector lines with explicit absolute positioning
+            // Connector 1 sits between node 1 (left) and node 2 (center)
+            // Connector 2 sits between node 2 (center) and node 3 (right)
+            const connectors = `
+                <div class="connector" style="width:20%;left:25%;top:50%;transform:translateY(-50%);"></div>
+                <div class="connector" style="width:20%;right:25%;top:50%;transform:translateY(-50%);"></div>`;
+
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <p class="anim" style="--anim-order:1">${d.description}</p>
+                <div class="diagram-container anim" style="--anim-order:2">
+                    ${nodeHtml}
+                    ${connectors}
+                </div>
+            </div>`;
+        }
+
+        static _journey(d) {
+            const typeMap = { accent: '', gold: ' journey-step--gold', success: ' journey-step--success' };
+            const steps = d.steps.map((step, i) => `
+                <div class="journey-step${typeMap[step.type] || ''} anim" style="--anim-order:${i + 1}">
+                    <span class="step-label step-label--${step.type}">${step.label}</span>
+                    <p>${step.text}</p>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="journey-grid">${steps}</div>
+            </div>`;
+        }
+
+        static _setup(d) {
+            const cards = d.items.map((item, i) => `
+                <div class="setup-card anim" style="--anim-order:${i + 1}">
+                    <i class="${item.icon}" style="color:${item.color};"></i>
+                    <div><h3>${item.title}</h3><p>${item.text}</p></div>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="setup-grid">${cards}</div>
+            </div>`;
+        }
+
+        static _tech(d) {
+            const boxes = d.items.map((item, i) => {
+                const scanLine = item.action === 'simulateScan' ? '<div class="scan-line"></div>' : '';
+                return `
+                <div class="tech-box anim" style="--anim-order:${i + 2}" onclick="${item.action}(this)">
+                    ${scanLine}
+                    <i class="${item.icon}"></i>
+                    <h3>${item.title}</h3>
+                    <p>${item.text}</p>
+                </div>`;
+            }).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <p class="anim" style="--anim-order:1">${d.description}</p>
+                <div class="tech-grid">${boxes}</div>
+            </div>`;
+        }
+
+        static _architecture(d) {
+            const cards = d.items.map((item, i) => `
+                <div class="arch-card anim" style="--anim-order:${i + 1}">
+                    <i class="${item.icon}" style="color:${item.color};"></i>
+                    <h3>${item.title}</h3><p>${item.text}</p>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="arch-grid">${cards}</div>
+            </div>`;
+        }
+
+        static _compliance(d) {
+            const modifiers = ['', ' compliance-item--accent', ' compliance-item--success'];
+            const items = d.items.map((item, i) => `
+                <div class="compliance-item${modifiers[i] || ''} anim" style="--anim-order:${i + 1}">
+                    <i class="${item.icon}" style="color:${item.color};"></i>
+                    <div><h3>${item.title}</h3><p>${item.text}</p></div>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="compliance-list">${items}</div>
+            </div>`;
+        }
+
+        static _finance(d) {
+            const c = d.costCard;
+            const r = d.revenueCard;
+            const costPoints = c.points.map(p =>
+                `<li><i class="fas fa-check-circle" style="color:var(--success);"></i> ${p}</li>`).join('');
+            const revPoints = r.points.map(p =>
+                `<li><i class="${p.icon}" style="color:${p.color};"></i> <strong>${p.title}</strong> ${p.text}</li>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="finance-grid">
+                    <div class="finance-card finance-card--cost anim" style="--anim-order:1">
+                        <h3><i class="fas fa-coins"></i> ${c.title}</h3>
+                        <div class="zero-cost">
+                            <div class="zero-cost-number">${c.value} <span class="zero-cost-unit">${c.unit}</span></div>
+                            <p class="zero-cost-label">${c.label}</p>
+                        </div>
+                        <ul class="finance-list">${costPoints}</ul>
+                    </div>
+                    <div class="finance-card finance-card--revenue anim" style="--anim-order:2">
+                        <h3><i class="fas fa-chart-bar"></i> ${r.title}</h3>
+                        <ul class="finance-list">${revPoints}</ul>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        static _ask(d) {
+            const colorMap = { gold: 'ask-card--gold', accent: 'ask-card--accent' };
+            const cards = d.items.map((item, i) => `
+                <div class="ask-card ${colorMap[item.color] || ''} anim" style="--anim-order:${i + 1}">
+                    <h3><i class="${item.icon}"></i> ${item.title}</h3>
+                    <p>${item.text}</p>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="ask-grid">${cards}</div>
+            </div>`;
+        }
+
+        static _timeline(d) {
+            const colorMap = { accent: 'var(--accent)', gold: 'var(--gold)', success: 'var(--success)' };
+            const nodes = d.nodes.map((node, i) => `
+                <div class="timeline-node${i === 0 ? ' active' : ''}" onclick="activateTimelineNode(${node.id})">
+                    <div class="timeline-dot">${node.id}</div>
+                    <div class="timeline-detail">
+                        <h4 style="color:${colorMap[node.color] || 'white'}">${node.title}</h4>
+                        <p>${node.text}</p>
+                        <p class="timeline-executor"><i class="fas fa-users-cog"></i> ${node.executor}</p>
+                    </div>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <p class="anim" style="--anim-order:1">${d.description}</p>
+                <div class="timeline-interactive anim" style="--anim-order:2">
+                    <div class="timeline-track" id="timelineTrack">${nodes}</div>
+                </div>
+            </div>`;
+        }
+
+        static _risks(d) {
+            const colorClass = { red: 'flip-card--red', yellow: 'flip-card--yellow', green: 'flip-card--green' };
+            const cards = d.items.map((item, i) => `
+                <div class="flip-card ${colorClass[item.color] || ''} anim" style="--anim-order:${i + 1}" onclick="flipCard(this)">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="${item.icon}"></i>
+                            <h3>${item.front.title}</h3>
+                            <p>${item.front.text}</p>
+                            <span class="flip-hint"><i class="fas fa-sync-alt"></i> اضغط لرؤية الحل</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>${item.back.title}</h3>
+                            <p>${item.back.text}</p>
+                        </div>
+                    </div>
+                </div>`).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="flip-grid">${cards}</div>
+                <p class="flip-instruction anim" style="--anim-order:${d.items.length + 1}">
+                    <i class="fas fa-hand-pointer"></i> اضغط على أي بطاقة لرؤية خطة الاستجابة
+                </p>
+            </div>`;
+        }
+
+        static _conclusion(d) {
+            const points = d.items.map((item, i) => `
+                <div class="conclusion-point anim" style="--anim-order:${i + 1}">
+                    <i class="${item.icon}" style="color:var(--${item.color});"></i>
+                    <h3>${item.title}</h3><p>${item.text}</p>
+                </div>`).join('');
+            return `
+            <div class="content-card text-center">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="conclusion-grid">${points}</div>
+                <div class="conclusion-motto anim" style="--anim-order:${d.items.length + 1}">${d.motto}</div>
+                <p class="anim" style="--anim-order:${d.items.length + 2}">${d.footer}</p>
+            </div>`;
+        }
+
+        static _closing(d) {
+            return `
+            <div class="content-card text-center">
+                <h1 class="gradient-text anim" style="--anim-order:0;font-size:3rem;margin-bottom:2rem;">${d.title}</h1>
+                <p class="anim" style="--anim-order:1;font-size:1.2rem;">${d.subtitle}</p>
+                <div class="qr-core anim" style="--anim-order:2">QR</div>
+                <p class="anim" style="--anim-order:3">${d.qrText}</p>
+            </div>`;
+        }
+    }
 
     // ── Particle System ──
     class ParticleSystem {
@@ -87,73 +414,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ── Impact Modal Data ──
-    const roleData = {
-        citizen: {
-            title: 'أثر المنظومة على المواطن',
-            pain: [
-                'وقت انتظار طويل وغير محدد في مراكز الانطلاق',
-                'عشوائية في الأسعار واستغلال من السماسرة',
-                'انعدام الراحة والأمان في بيئة الكراج',
-                'عدم معرفة مواعيد الرحلات والمقاعد المتاحة مسبقاً'
-            ],
-            causes: [
-                'الازدحام والتدافع العشوائي اليومي',
-                'غياب نظام حجز مسبق ومنظم',
-                'الاستغلال المادي من وسطاء غير مرخصين'
-            ],
-            solutions: [
-                'حجز فوري من المنزل عبر التطبيق',
-                'أسعار رسمية ثابتة وشفافة لجميع الخطوط',
-                'معرفة دقيقة بمواعيد الانطلاق والمقاعد المتاحة',
-                'تذكرة رقمية موثقة بـ QR تحفظ حقوق المسافر'
-            ]
-        },
-        company: {
-            title: 'أثر المنظومة على شركات النقل',
-            pain: [
-                'تسرب مالي من ظاهرة \"الجباية\" اليدوية غير المراقبة',
-                'غياب بيانات إحصائية دقيقة عن الرحلات والركاب',
-                'صعوبة تتبع أداء السائقين والالتزام بالجداول',
-                'إدارة ورقية مرهقة وعرضة للأخطاء'
-            ],
-            causes: [
-                'خسائر مالية مستمرة وصعوبة التدقيق',
-                'عدم القدرة على التخطيط للتوسع بناءً على بيانات',
-                'ضعف الثقة بين الإدارة والعاملين في الميدان'
-            ],
-            solutions: [
-                'تتبع مالي لحظي وإيرادات موثقة إلكترونياً',
-                'تقارير أداء ذكية لرفع الكفاءة التشغيلية',
-                'إدارة متكاملة للحافلات والسائقين والمسارات',
-                'مانيفست رقمي آلي يلغي الحاجة للتوثيق الورقي'
-            ]
-        },
-        state: {
-            title: 'أثر المنظومة على وزارة النقل (الدولة)',
-            pain: [
-                'غياب شبه كامل للبيانات عن حركة النقل البري',
-                'صعوبة الرقابة الفعلية على التزام الشركات',
-                'تسرب موارد ضريبية بسبب التعاملات النقدية غير الموثقة',
-                'عدم القدرة على التخطيط الاستراتيجي لقطاع النقل'
-            ],
-            causes: [
-                'استحالة إجراء تحليلات أو اتخاذ قرارات مبنية على بيانات',
-                'استياء المواطنين من جودة الخدمات العامة للنقل',
-                'ضعف الهيبة التنظيمية للوزارة في قطاع البولمان'
-            ],
-            solutions: [
-                'أرشيف وطني رقمي موحد لحركة النقل والركاب',
-                'رقابة مركزية لحظية على جميع الخطوط والشركات',
-                'الحد الجذري من التسرب الضريبي عبر الأتمتة الكاملة',
-                'قرارات تخطيطية مبنية على حقائق وبيانات حقيقية'
-            ]
-        }
-    };
-
     // ── Show Impact Modal ──
+    // Data is sourced from window.impactData defined in content.js
     window.showImpact = function (role) {
-        const data = roleData[role];
+        const data = (window.impactData || {})[role];
         if (!data) return;
         document.getElementById('impactTitle').innerText = data.title;
         document.getElementById('impactPain').innerHTML = data.pain.map(i => `<li>${i}</li>`).join('');
@@ -273,49 +537,53 @@ document.addEventListener('DOMContentLoaded', () => {
     notesToggle?.addEventListener('click', toggleNotes);
 
     // ── Fullscreen Toggle ──
-    // ── Fullscreen Toggle ──
     const fullscreenBtn = document.getElementById('fullscreenBtn');
-    if (fullscreenBtn) {
-        fullscreenBtn.addEventListener('click', () => {
-            console.log("Fullscreen button clicked");
-            const doc = document.documentElement;
-            const isFull = document.fullscreenElement || 
-                           document.webkitFullscreenElement || 
-                           document.mozFullScreenElement || 
-                           document.msFullscreenElement;
 
-            if (!isFull) {
-                const request = doc.requestFullscreen || 
-                                doc.webkitRequestFullscreen || 
-                                doc.mozRequestFullScreen || 
-                                doc.msRequestFullscreen;
-                if (request) {
-                    request.call(doc)
-                        .then(() => {
-                            console.log("Fullscreen enabled successfully");
-                            fullscreenBtn.querySelector('i').className = 'fas fa-compress';
-                        })
-                        .catch(err => {
-                            console.error(`Fullscreen request failed: ${err.message} (${err.name})`);
-                            alert("حدث خطأ أثناء محاولة تكبير الشاشة: " + err.message);
-                        });
-                } else {
-                    alert("Fullscreen API is not supported in this browser.");
-                }
+    function handleToggleFullscreen() {
+        console.log("Fullscreen toggle triggered");
+        const doc = document.documentElement;
+        const isFull = document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement;
+
+        if (!isFull) {
+            const request = doc.requestFullscreen ||
+                doc.webkitRequestFullscreen ||
+                doc.mozRequestFullScreen ||
+                doc.msRequestFullscreen;
+            if (request) {
+                request.call(doc)
+                    .then(() => {
+                        console.log("Fullscreen enabled");
+                        if (fullscreenBtn) fullscreenBtn.querySelector('i').className = 'fas fa-compress';
+                    })
+                    .catch(err => {
+                        console.error(`Fullscreen request failed: ${err.message} (${err.name})`);
+                        if (err.name === 'NotAllowedError') {
+                            alert("Chrome blocked fullscreen. Please click the button directly instead of using the keyboard if it fails.");
+                        }
+                    });
             } else {
-                const exit = document.exitFullscreen || 
-                             document.webkitExitFullscreen || 
-                             document.mozCancelFullScreen || 
-                             document.msExitFullscreen;
-                if (exit) {
-                    exit.call(document)
-                        .then(() => {
-                            fullscreenBtn.querySelector('i').className = 'fas fa-expand';
-                        })
-                        .catch(() => {});
-                }
+                alert("Fullscreen API is not supported in this browser.");
             }
-        });
+        } else {
+            const exit = document.exitFullscreen ||
+                document.webkitExitFullscreen ||
+                document.mozCancelFullScreen ||
+                document.msExitFullscreen;
+            if (exit) {
+                exit.call(document)
+                    .then(() => {
+                        if (fullscreenBtn) fullscreenBtn.querySelector('i').className = 'fas fa-expand';
+                    })
+                    .catch(() => { });
+            }
+        }
+    }
+
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', handleToggleFullscreen);
     }
 
     // Handle ESC key or manual exit to update icon
@@ -341,7 +609,10 @@ document.addEventListener('DOMContentLoaded', () => {
             nextSlide();
         }
         if (e.key.toLowerCase() === 'n') toggleNotes();
-        if (e.key.toLowerCase() === 'f') toggleFullscreen();
+        if (e.key.toLowerCase() === 'f') {
+            e.preventDefault();
+            handleToggleFullscreen();
+        }
         if (e.key === 'Escape') {
             document.getElementById('impactOverlay')?.classList.remove('active');
         }
@@ -367,16 +638,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { passive: true });
 
-    // ── QR Core Click ──
-    const qrCore = document.querySelector('.qr-core');
-    if (qrCore) {
-        qrCore.addEventListener('click', function () {
-            this.innerHTML = '<i class="fas fa-check-circle" style="color: var(--success);"></i>';
-            setTimeout(() => { this.innerHTML = 'QR'; }, 2000);
-        });
-    }
+    // ── Wire Navigation Buttons (by ID, not inline onclick) ──
+    document.getElementById('prevBtn')?.addEventListener('click', prevSlide);
+    document.getElementById('nextBtn')?.addEventListener('click', nextSlide);
 
     // ── Initialize ──
+    // 1. Render all slides from content.js into #slidesContainer
+    SlideRenderer.renderAll(window.slidesData, slidesContainer);
+
+    // 2. Wire QR click after render (element now exists in DOM)
+    document.querySelector('.qr-core')?.addEventListener('click', function () {
+        this.innerHTML = '<i class="fas fa-check-circle" style="color:var(--success);"></i>';
+        setTimeout(() => { this.innerHTML = 'QR'; }, 2000);
+    });
+
+    // 3. Start particle system and show first slide
     new ParticleSystem('particleCanvas');
     updateSlide();
 });
