@@ -1,38 +1,115 @@
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
 
+/* ============================================
+   1. DESIGN TOKENS & CSS VARIABLES
+   ============================================ */
 :root {
     --primary: #0F172A;
     --primary-light: #1E293B;
+    --primary-lighter: #334155;
     --accent: #3B82F6;
+    --accent-light: #60A5FA;
     --secondary: #8B5CF6;
     --gold: #F59E0B;
+    --gold-light: #FBBF24;
+    --success: #10B981;
+    --success-light: #34D399;
+    --error: #EF4444;
+    --error-light: #F87171;
+    --warning: #F59E0B;
+    --info: #06B6D4;
     --text-primary: #F8FAFC;
     --text-secondary: #CBD5E1;
-    --bg-gradient: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    --text-muted: #94A3B8;
+    --bg-gradient: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
     --glass: rgba(255, 255, 255, 0.05);
+    --glass-hover: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-hover: rgba(255, 255, 255, 0.2);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.5);
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --transition-fast: 0.2s ease;
+    --transition: 0.3s ease;
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-* {
+/* ============================================
+   2. RESET & BASE
+   ============================================ */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Tajawal', sans-serif;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
 }
 
 body {
+    font-family: 'Tajawal', sans-serif;
     background: var(--primary);
     color: var(--text-primary);
     overflow: hidden;
     direction: rtl;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+/* ============================================
+   3. PARTICLE CANVAS
+   ============================================ */
+#particleCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ============================================
+   4. PRESENTATION CONTAINER
+   ============================================ */
 .presentation-container {
     width: 100vw;
     height: 100vh;
     position: relative;
+    z-index: 1;
 }
 
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-gradient);
+    z-index: -2;
+}
+
+.hero-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.15;
+    z-index: -1;
+    filter: blur(3px) saturate(0.7);
+}
+
+/* ============================================
+   5. SLIDE SYSTEM
+   ============================================ */
 .slide {
     position: absolute;
     top: 0;
@@ -44,69 +121,38 @@ body {
     justify-content: center;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    transform: scale(0.95);
+    transform: scale(0.92) translateY(20px);
+    transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 2rem 5%;
     visibility: hidden;
+    pointer-events: none;
 }
 
 .slide.active {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
     visibility: visible;
+    pointer-events: auto;
 }
 
-.background-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--bg-gradient);
-    z-index: -2;
-}
-
-.hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.3;
-    z-index: -1;
-    filter: blur(2px);
-}
-
+/* ============================================
+   6. CONTENT CARD (Glassmorphism)
+   ============================================ */
 .content-card {
     background: var(--glass);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    padding: 3rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    max-width: 1100px;
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 3rem;
+    box-shadow: var(--shadow);
+    max-width: 1150px;
     width: 95%;
     max-height: 85vh;
-    /* Ensure it fits the screen height */
     position: relative;
     overflow-y: auto;
-    /* Enable scrolling if content overflows */
     overflow-x: hidden;
-}
-
-/* Custom clear scrollbar for the card */
-.content-card::-webkit-scrollbar {
-    width: 6px;
-}
-
-.content-card::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-}
-
-.content-card::-webkit-scrollbar-track {
-    background: transparent;
 }
 
 .content-card::before {
@@ -114,157 +160,242 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 5px;
+    width: 4px;
     height: 100%;
-    background: var(--accent);
+    background: linear-gradient(180deg, var(--accent), var(--secondary), var(--gold));
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
 }
 
+.content-card::-webkit-scrollbar {
+    width: 5px;
+}
+
+.content-card::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+.content-card::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ============================================
+   7. TYPOGRAPHY
+   ============================================ */
 h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
+    font-size: 3rem;
+    font-weight: 800;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
-    line-height: 1.2;
+    line-height: 1.3;
+}
+
+h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--accent-light);
+    border-bottom: 2px solid var(--glass-border);
+    padding-bottom: 0.8rem;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    width: 80px;
+    height: 2px;
+    background: var(--gold);
+}
+
+h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
 .gold-text {
     color: var(--gold);
 }
 
-h2 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: var(--accent);
-    border-bottom: 2px solid var(--glass-border);
-    padding-bottom: 1rem;
+.accent-text {
+    color: var(--accent-light);
 }
 
-p {
-    font-size: 1.4rem;
-    line-height: 1.8;
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+.success-text {
+    color: var(--success);
 }
 
-ul {
-    list-style: none;
-    width: 100%;
+.error-text {
+    color: var(--error-light);
 }
 
-li {
-    font-size: 1.3rem;
-    margin-bottom: 1.2rem;
-    padding-right: 2rem;
-    position: relative;
-    color: var(--text-secondary);
-}
-
-li::before {
-    content: '←';
-    position: absolute;
-    right: 0;
-    color: var(--accent);
-    font-weight: bold;
-}
-
-/* Grid for Matrix */
-.matrix {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.matrix-item {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid var(--glass-border);
+.text-center {
     text-align: center;
 }
 
-.matrix-item h3 {
-    color: var(--gold);
-    margin-bottom: 0.5rem;
+.text-right {
+    text-align: right;
 }
 
-/* Navigation */
+/* ============================================
+   8. PROGRESS BAR
+   ============================================ */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold), var(--success));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    box-shadow: 0 0 10px var(--gold);
+}
+
+/* ============================================
+   9. LOGO & BADGE
+   ============================================ */
+.logo-container {
+    position: fixed;
+    top: 1.5rem;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    z-index: 100;
+}
+
+.logo-text {
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--text-primary), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.badge {
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    padding: 0.25rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ============================================
+   10. SLIDE COUNTER
+   ============================================ */
+.slide-counter {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    z-index: 100;
+    font-weight: 500;
+    direction: ltr;
+    background: var(--glass);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   11. NAVIGATION CONTROLS
+   ============================================ */
 .nav-controls {
     position: fixed;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     z-index: 100;
 }
 
 .nav-btn {
     background: var(--glass);
     border: 1px solid var(--glass-border);
-    color: white;
-    padding: 1rem 2rem;
+    color: var(--text-primary);
+    padding: 0.8rem 1.8rem;
     border-radius: 50px;
     cursor: pointer;
-    transition: 0.3s;
-    backdrop-filter: blur(5px);
-    font-weight: bold;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .nav-btn:hover {
     background: var(--accent);
+    border-color: var(--accent);
     transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
 }
 
-.progress-bar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gold);
-    transition: width 0.3s ease;
-    z-index: 1000;
+.nav-btn:active {
+    transform: translateY(-1px);
 }
 
-.logo-container {
+/* ============================================
+   12. SPEAKER NOTES
+   ============================================ */
+.speaker-notes-toggle {
     position: fixed;
-    top: 2rem;
+    bottom: 2rem;
     right: 2rem;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--primary);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    z-index: 100;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 210;
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+    font-size: 1.3rem;
+    transition: var(--transition);
 }
 
-.logo-text {
-    font-weight: bold;
-    font-size: 1.5rem;
-    letter-spacing: 1px;
+.speaker-notes-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
 }
 
-.badge {
-    background: var(--accent);
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-}
-
-/* Speaker Notes Panel */
 .speaker-notes-panel {
     position: fixed;
     bottom: -300px;
     left: 0;
     width: 100%;
-    height: 250px;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(20px);
+    height: 220px;
+    background: rgba(15, 23, 42, 0.97);
+    backdrop-filter: blur(25px);
     border-top: 2px solid var(--gold);
-    padding: 2rem;
-    transition: bottom 0.5s ease;
+    padding: 1.5rem 2rem;
+    transition: bottom var(--transition-slow);
     z-index: 200;
     overflow-y: auto;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
 }
 
 .speaker-notes-panel.visible {
@@ -274,43 +405,239 @@ li::before {
 .speaker-notes-content {
     max-width: 900px;
     margin: 0 auto;
+    color: var(--gold-light);
+    font-size: 1.15rem;
+    line-height: 1.8;
+    font-weight: 400;
+}
+
+.speaker-note-data {
+    display: none !important;
+}
+
+/* ============================================
+   13. TITLE SLIDE
+   ============================================ */
+.slide-republic {
     color: var(--gold);
-    font-size: 1.2rem;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.slide-footer {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 1.5rem;
+}
+
+.presenter-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.date-text {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+}
+
+/* ============================================
+   14. ABOUT US SLIDE
+   ============================================ */
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.about-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    transition: var(--transition);
+    text-align: right;
+}
+
+.about-card:hover {
+    border-color: var(--accent);
+    background: rgba(59, 130, 246, 0.05);
+    transform: translateY(-3px);
+}
+
+.about-card i {
+    font-size: 2rem;
+    min-width: 40px;
+    text-align: center;
+    padding-top: 0.3rem;
+}
+
+.about-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.3rem;
+}
+
+.about-card p {
+    font-size: 0.95rem;
+    margin: 0;
     line-height: 1.6;
 }
 
-.speaker-notes-toggle {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: var(--gold);
-    color: var(--primary);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 210;
-    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-    font-weight: bold;
-    font-size: 1.5rem;
+.about-mission {
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
 }
 
-/* Diagrams */
+.about-mission p {
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ============================================
+   15. PAIN GRID & CARDS
+   ============================================ */
+.pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.pain-grid--3col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.pain-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--glass-border);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.pain-card:hover {
+    border-color: var(--error);
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.15);
+    transform: translateY(-3px);
+}
+
+.pain-card:hover h3,
+.pain-card:hover p {
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
+.pain-card h3 i {
+    margin-left: 0.5rem;
+}
+
+.pain-card p {
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+@keyframes glitch {
+    0%   { transform: translate(0) }
+    20%  { transform: translate(-1px, 1px) }
+    40%  { transform: translate(-1px, -1px) }
+    60%  { transform: translate(1px, 1px) }
+    80%  { transform: translate(1px, -1px) }
+    100% { transform: translate(0) }
+}
+
+/* ============================================
+   16. BENCHMARK TABLE
+   ============================================ */
+.benchmark-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.benchmark-table thead tr {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.benchmark-table th {
+    padding: 1rem;
+    color: var(--gold);
+    text-align: right;
+    font-weight: 700;
+    font-size: 1rem;
+    border-bottom: 2px solid var(--gold);
+}
+
+.benchmark-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.benchmark-table tbody tr {
+    transition: var(--transition);
+}
+
+.benchmark-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.benchmark-table .status-bad {
+    color: var(--error-light);
+    font-weight: 500;
+}
+
+.benchmark-table .status-good {
+    color: var(--success);
+    font-weight: 700;
+}
+
+/* ============================================
+   17. DIAGRAM & NODES (Strategic Vision)
+   ============================================ */
 .diagram-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-top: 3rem;
+    margin-top: 2rem;
     position: relative;
     padding: 2rem;
 }
 
+.clickable-node {
+    cursor: pointer;
+    z-index: 2;
+}
+
+.clickable-node:hover .node {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+    background: rgba(59, 130, 246, 0.15);
+    transform: scale(1.1);
+}
+
 .node {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     background: var(--glass);
     border: 2px solid var(--accent);
@@ -318,21 +645,30 @@ li::before {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-weight: bold;
+    font-weight: 700;
     text-align: center;
     position: relative;
     z-index: 2;
-    transition: transform 0.3s;
+    transition: var(--transition);
+    animation: float 4s ease-in-out infinite;
 }
 
-.node:hover {
-    transform: scale(1.1);
-    background: rgba(59, 130, 246, 0.1);
+.node--gold {
+    border-color: var(--gold);
+    animation-delay: 0.5s;
+}
+
+.node--gold:hover {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.4) !important;
 }
 
 .node i {
     font-size: 2rem;
     margin-bottom: 0.5rem;
+}
+
+.node span {
+    font-size: 1rem;
 }
 
 .connector {
@@ -343,39 +679,35 @@ li::before {
     animation: flow 2s infinite linear;
 }
 
-@keyframes flow {
-    0% {
-        opacity: 0.2;
-        transform: scaleX(0.8);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scaleX(1);
-    }
-
-    100% {
-        opacity: 0.2;
-        transform: scaleX(0.8);
-    }
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
-/* Impact Modal Style */
+@keyframes flow {
+    0%   { opacity: 0.2; transform: scaleX(0.8); }
+    50%  { opacity: 1;   transform: scaleX(1); }
+    100% { opacity: 0.2; transform: scaleX(0.8); }
+}
+
+/* ============================================
+   18. IMPACT MODAL
+   ============================================ */
 .impact-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(20px);
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(25px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 500;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all var(--transition-slow);
 }
 
 .impact-overlay.active {
@@ -386,13 +718,13 @@ li::before {
 .impact-card {
     background: var(--glass);
     border: 1px solid var(--glass-border);
-    border-radius: 32px;
-    padding: 3rem;
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
     max-width: 1100px;
     width: 90%;
     position: relative;
-    transform: translateY(50px) scale(0.9);
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(40px) scale(0.9);
+    transition: all var(--transition-bounce);
 }
 
 .impact-overlay.active .impact-card {
@@ -401,8 +733,8 @@ li::before {
 
 .close-impact {
     position: absolute;
-    top: 1.5rem;
-    left: 1.5rem;
+    top: 1.2rem;
+    left: 1.2rem;
     width: 40px;
     height: 40px;
     background: rgba(255, 255, 255, 0.1);
@@ -412,67 +744,13 @@ li::before {
     justify-content: center;
     cursor: pointer;
     color: white;
-    transition: 0.3s;
+    transition: var(--transition);
+    font-size: 1.1rem;
 }
 
 .close-impact:hover {
     background: var(--error);
     transform: rotate(90deg);
-}
-
-.impact-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.impact-column {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 2rem;
-    border-radius: 20px;
-    border-top: 4px solid var(--accent);
-}
-
-.impact-column.pain {
-    border-color: var(--error);
-}
-
-.impact-column.causes {
-    border-color: var(--warning);
-}
-
-.impact-column.solutions {
-    border-color: var(--success);
-}
-
-.impact-column h4 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.impact-column ul li {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    line-height: 1.4;
-    padding-right: 1.5rem;
-}
-
-.impact-column ul li::before {
-    content: '•';
-    color: inherit;
-}
-
-.clickable-node {
-    cursor: pointer;
-}
-
-.clickable-node:hover .node {
-    box-shadow: 0 0 20px var(--accent);
-    background: rgba(59, 130, 246, 0.2);
 }
 
 .impact-header {
@@ -481,104 +759,200 @@ li::before {
 }
 
 .impact-header h3 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: var(--gold);
 }
 
-/* =========================================
-   NEW WOW EDITION STYLES
-   ========================================= */
+.impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
 
-/* Slide 2: Pain Cards & Glitch */
-.pain-grid {
+.impact-column {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border-top: 3px solid var(--accent);
+}
+
+.impact-column.pain { border-color: var(--error); }
+.impact-column.causes { border-color: var(--warning); }
+.impact-column.solutions { border-color: var(--success); }
+
+.impact-column h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.impact-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.impact-column ul li {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.5;
+    padding-right: 1.2rem;
+    position: relative;
+    color: var(--text-secondary);
+}
+
+.impact-column ul li::before {
+    content: '•';
+    position: absolute;
+    right: 0;
+    color: inherit;
+    font-weight: bold;
+}
+
+/* ============================================
+   19. JOURNEY STEPS (Citizen)
+   ============================================ */
+.journey-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.journey-step {
+    background: rgba(255, 255, 255, 0.04);
+    padding: 1.2rem;
+    border-radius: var(--radius-sm);
+    width: 30%;
+    border-right: 3px solid var(--accent);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: right;
+    transition: var(--transition);
+}
+
+.journey-step:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+}
+
+.journey-step--gold { border-right-color: var(--gold); }
+.journey-step--success { border-right-color: var(--success); }
+
+.journey-step .step-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.journey-step .step-label--accent { color: var(--accent); }
+.journey-step .step-label--gold { color: var(--gold); }
+.journey-step .step-label--success { color: var(--success); }
+
+.journey-step p {
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ============================================
+   20. SETUP GRID (Company)
+   ============================================ */
+.setup-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    width: 100%;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
 }
 
-.pain-card {
-    background: rgba(15, 23, 42, 0.6);
+.setup-card {
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    text-align: right;
     border: 1px solid var(--glass-border);
-    padding: 2rem;
-    border-radius: 16px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-    cursor: crosshair;
+    border-radius: var(--radius-md);
+    background: var(--glass);
+    transition: var(--transition);
 }
 
-.pain-card:hover {
-    border-color: var(--error);
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+.setup-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    background: var(--glass-hover);
 }
 
-.pain-card:hover h3,
-.pain-card:hover p {
-    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-    color: var(--error-light, #F87171);
+.setup-card i {
+    font-size: 2.5rem;
+    min-width: 50px;
+    text-align: center;
 }
 
-@keyframes glitch {
-    0% {
-        transform: translate(0)
-    }
-
-    20% {
-        transform: translate(-2px, 2px)
-    }
-
-    40% {
-        transform: translate(-2px, -2px)
-    }
-
-    60% {
-        transform: translate(2px, 2px)
-    }
-
-    80% {
-        transform: translate(2px, -2px)
-    }
-
-    100% {
-        transform: translate(0)
-    }
+.setup-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
 }
 
-/* Slide 4: Tech Stack Scanner */
+.setup-card p {
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+/* ============================================
+   21. TECH GRID & SCANNER
+   ============================================ */
 .tech-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    gap: 1.5rem;
     text-align: center;
+    margin-top: 1.5rem;
 }
 
 .tech-box {
     background: var(--glass);
-    padding: 3rem 2rem;
-    border-radius: 24px;
+    padding: 2.5rem 1.5rem;
+    border-radius: var(--radius-lg);
     border: 2px solid transparent;
-    transition: 0.4s;
+    transition: var(--transition);
     position: relative;
     cursor: pointer;
     overflow: hidden;
 }
 
 .tech-box i {
-    font-size: 4rem;
+    font-size: 3rem;
     color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    transition: 0.4s;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+    display: block;
+}
+
+.tech-box h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+}
+
+.tech-box p {
+    font-size: 0.95rem;
+    margin: 0;
 }
 
 .tech-box:hover {
     border-color: var(--success);
-    background: rgba(16, 185, 129, 0.1);
-    transform: translateY(-10px);
+    background: rgba(16, 185, 129, 0.08);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.15);
 }
 
 .tech-box:hover i {
     color: var(--success);
+    transform: scale(1.1);
 }
 
 .scan-line {
@@ -586,208 +960,598 @@ li::before {
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
+    height: 3px;
     background: var(--success);
     box-shadow: 0 0 15px var(--success);
     opacity: 0;
 }
 
 .tech-box.scanning .scan-line {
-    animation: scanning 2s ease-in-out infinite;
+    animation: scanning 2s ease-in-out;
     opacity: 1;
 }
 
 @keyframes scanning {
-    0% {
-        top: 10%;
-        opacity: 0;
-    }
-
-    10% {
-        opacity: 1;
-    }
-
-    90% {
-        opacity: 1;
-    }
-
-    100% {
-        top: 90%;
-        opacity: 0;
-    }
+    0%   { top: 5%; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { top: 95%; opacity: 0; }
 }
 
-/* Slide 5: Live Bar Chart */
-.chart-container {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-around;
-    height: 300px;
-    width: 100%;
-    border-bottom: 2px solid var(--glass-border);
-    border-left: 2px solid var(--glass-border);
-    padding: 0 2rem;
-    margin-top: 3rem;
-}
-
-.chart-bar-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 15%;
-    height: 100%;
-    justify-content: flex-end;
-}
-
-.chart-bar {
-    width: 100%;
-    background: var(--accent);
-    border-radius: 8px 8px 0 0;
-    height: 0;
-    /* Animated via JS or transition */
-    transition: height 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-}
-
-.chart-bar.gold {
-    background: var(--gold);
-    box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
-}
-
-.chart-bar.success {
-    background: var(--success);
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
-}
-
-.chart-label {
-    margin-top: 1rem;
-    font-weight: bold;
-    color: var(--text-secondary);
-}
-
-.chart-value {
-    position: absolute;
-    top: -30px;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-    opacity: 0;
-    transition: opacity 1s 1s;
-}
-
-/* Slide 6: Counter Boxes */
-.counter-grid {
+/* ============================================
+   22. ARCHITECTURE SLIDE
+   ============================================ */
+.arch-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-top: 3rem;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
 }
 
-.counter-box {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+.arch-card {
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--glass-border);
-    border-top: 4px solid var(--gold);
-    border-radius: 16px;
-    padding: 3rem 1rem;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.arch-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--secondary));
+}
+
+.arch-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+}
+
+.arch-card i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.arch-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.arch-card p {
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.arch-card--security::before {
+    background: linear-gradient(90deg, var(--success), var(--info));
+}
+
+.arch-card--data::before {
+    background: linear-gradient(90deg, var(--gold), var(--warning));
+}
+
+/* ============================================
+   23. COMPLIANCE LIST
+   ============================================ */
+.compliance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.compliance-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    border-right: 4px solid var(--gold);
+    transition: var(--transition);
+}
+
+.compliance-item:hover {
+    background: var(--glass-hover);
+    transform: translateX(-5px);
+}
+
+.compliance-item--accent { border-right-color: var(--accent); }
+.compliance-item--success { border-right-color: var(--success); }
+
+.compliance-item i {
+    font-size: 2.2rem;
+    min-width: 50px;
     text-align: center;
 }
 
-.counter-value {
-    font-size: 4.5rem;
-    font-weight: bold;
-    color: var(--gold);
-    line-height: 1;
+.compliance-item h3 {
+    margin-bottom: 0.3rem;
+}
+
+.compliance-item p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* ============================================
+   24. FINANCIAL CARDS
+   ============================================ */
+.finance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.finance-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: right;
+    transition: var(--transition);
+}
+
+.finance-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--glass-border-hover);
+}
+
+.finance-card h3 {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.finance-card h3 i {
+    font-size: 1.3rem;
+}
+
+.finance-card--cost h3 { color: var(--error-light); }
+.finance-card--revenue { border-color: rgba(16, 185, 129, 0.3); }
+.finance-card--revenue h3 { color: var(--success); }
+
+.zero-cost {
+    text-align: center;
     margin: 1rem 0;
 }
 
-.counter-label {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
+.zero-cost-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--success);
+    line-height: 1;
 }
 
-/* Slide 8: Timeline */
-.timeline {
+.zero-cost-unit {
+    font-size: 1.1rem;
+    color: var(--success);
+}
+
+.zero-cost-label {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 0.5rem;
+}
+
+.finance-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.finance-list li {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    padding-right: 0;
+    line-height: 1.6;
+}
+
+.finance-list li::before {
+    content: none;
+}
+
+.finance-list li i {
+    width: 22px;
+    margin-left: 0.3rem;
+}
+
+/* ============================================
+   25. ASK GRID (Regulatory)
+   ============================================ */
+.ask-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.ask-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: right;
+    transition: var(--transition);
+}
+
+.ask-card:hover {
+    transform: translateY(-3px);
+}
+
+.ask-card--gold {
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.ask-card--gold h3 {
+    color: var(--gold);
+}
+
+.ask-card--accent {
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.ask-card--accent h3 {
+    color: var(--accent-light);
+}
+
+.ask-card h3 {
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ask-card p {
+    font-size: 1rem;
+    line-height: 1.8;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* ============================================
+   26. INTERACTIVE TIMELINE
+   ============================================ */
+.timeline-interactive {
     position: relative;
-    max-width: 100%;
-    margin: 4rem auto 0;
+    margin-top: 2rem;
+    padding: 0 1rem;
+}
+
+.timeline-track {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
 }
 
-.timeline::before {
+.timeline-track::before {
     content: '';
     position: absolute;
     top: 25px;
     left: 10%;
     right: 10%;
-    height: 4px;
+    height: 3px;
     background: var(--glass-border);
     z-index: 1;
 }
 
-.timeline-item {
-    position: relative;
+.timeline-track::after {
+    content: '';
+    position: absolute;
+    top: 25px;
+    right: 10%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
     z-index: 2;
+    width: 0%;
+    transition: width 0.8s ease;
+}
+
+.timeline-track.step-1::after { width: 0%; }
+.timeline-track.step-2::after { width: 40%; }
+.timeline-track.step-3::after { width: 80%; }
+
+.timeline-node {
     text-align: center;
     width: 30%;
     cursor: pointer;
+    position: relative;
+    z-index: 3;
 }
 
 .timeline-dot {
     width: 50px;
     height: 50px;
     background: var(--primary-light);
-    border: 4px solid var(--accent);
+    border: 3px solid var(--glass-border);
     border-radius: 50%;
-    margin: 0 auto 1.5rem;
-    transition: 0.3s;
+    margin: 0 auto 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-weight: bold;
+    font-weight: 800;
+    font-size: 1.1rem;
+    transition: var(--transition);
 }
 
-.timeline-item:hover .timeline-dot,
-.timeline-item.active .timeline-dot {
+.timeline-node:hover .timeline-dot,
+.timeline-node.active .timeline-dot {
     background: var(--accent);
-    transform: scale(1.2);
-    box-shadow: 0 0 20px var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
 }
 
-.timeline-content {
+.timeline-node:nth-child(2):hover .timeline-dot,
+.timeline-node:nth-child(2).active .timeline-dot {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+.timeline-node:nth-child(3):hover .timeline-dot,
+.timeline-node:nth-child(3).active .timeline-dot {
+    background: var(--success);
+    border-color: var(--success);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.timeline-detail {
     background: var(--glass);
-    padding: 1.5rem;
-    border-radius: 12px;
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
     border: 1px solid var(--glass-border);
     opacity: 0.5;
-    transform: translateY(20px);
-    transition: 0.5s;
+    transform: translateY(10px);
+    transition: var(--transition-slow);
+    text-align: right;
 }
 
-.timeline-item:hover .timeline-content,
-.timeline-item.active .timeline-content {
+.timeline-node:hover .timeline-detail,
+.timeline-node.active .timeline-detail {
     opacity: 1;
     transform: translateY(0);
     border-color: var(--accent);
 }
 
-/* Slide 10: QR Core */
+.timeline-detail h4 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-detail p {
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.timeline-executor {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--gold);
+    font-weight: 500;
+    font-style: italic;
+}
+
+/* ============================================
+   27. FLIP CARDS (Risk Management)
+   ============================================ */
+.flip-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.flip-card {
+    perspective: 1000px;
+    height: 220px;
+    cursor: pointer;
+}
+
+.flip-card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.flip-card-front {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid var(--glass-border);
+}
+
+.flip-card-front i {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.flip-card-front h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+
+.flip-card-front p {
+    font-size: 0.85rem;
+    margin: 0;
+    opacity: 0.7;
+}
+
+.flip-card-front .flip-hint {
+    position: absolute;
+    bottom: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.flip-card-back {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--glass-border);
+    transform: rotateY(180deg);
+}
+
+.flip-card-back i {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+}
+
+.flip-card-back h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.flip-card-back p {
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Flip card color variants */
+.flip-card--red .flip-card-front {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+.flip-card--red .flip-card-front i { color: var(--error-light); }
+.flip-card--red .flip-card-back {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+.flip-card--red .flip-card-back i { color: var(--success); }
+
+.flip-card--yellow .flip-card-front {
+    border-color: rgba(245, 158, 11, 0.3);
+}
+.flip-card--yellow .flip-card-front i { color: var(--gold); }
+.flip-card--yellow .flip-card-back {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+.flip-card--yellow .flip-card-back i { color: var(--success); }
+
+.flip-card--green .flip-card-front {
+    border-color: rgba(6, 182, 212, 0.3);
+}
+.flip-card--green .flip-card-front i { color: var(--info); }
+.flip-card--green .flip-card-back {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+.flip-card--green .flip-card-back i { color: var(--success); }
+
+.flip-instruction {
+    text-align: center;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   28. CONCLUSION SLIDE
+   ============================================ */
+.conclusion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.conclusion-point {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.conclusion-point:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+}
+
+.conclusion-point i {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+    display: block;
+}
+
+.conclusion-point h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+}
+
+.conclusion-point p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.conclusion-motto {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 1.6rem;
+    color: var(--gold);
+    font-weight: 700;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(139, 92, 246, 0.08));
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* ============================================
+   29. QR CORE (Closing)
+   ============================================ */
 .qr-core {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     background: var(--glass);
-    border: 4px solid var(--accent);
-    border-radius: 24px;
-    margin: 3rem auto;
+    border: 3px solid var(--accent);
+    border-radius: var(--radius-lg);
+    margin: 2rem auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 5rem;
+    font-size: 4rem;
     position: relative;
     cursor: pointer;
+    transition: var(--transition);
+}
+
+.qr-core:hover {
+    transform: scale(1.05);
+    border-color: var(--gold);
 }
 
 .qr-core::before,
@@ -809,13 +1573,224 @@ li::before {
 }
 
 @keyframes sonar {
-    0% {
-        transform: scale(0.8);
+    0%   { transform: scale(0.85); opacity: 1; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* ============================================
+   30. STAGGERED ANIMATIONS
+   ============================================ */
+.anim {
+    opacity: 0;
+    transform: translateY(25px);
+}
+
+.slide.active .anim {
+    animation: fadeSlideUp 0.65s ease forwards;
+    animation-delay: calc(var(--anim-order, 0) * 0.1s);
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
         opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeSlideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Pulse for important elements */
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.3); }
+    50%      { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Gradient text animation */
+@keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.gradient-text {
+    background: linear-gradient(270deg, var(--gold), var(--accent), var(--secondary), var(--gold));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+}
+
+/* ============================================
+   31. FULLSCREEN BUTTON
+   ============================================ */
+.fullscreen-btn {
+    position: fixed;
+    top: 1.5rem;
+    left: 2rem;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.fullscreen-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+/* ============================================
+   32. RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1024px) {
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.8rem; }
+    
+    .content-card {
+        padding: 2rem;
+        width: 98%;
+    }
+    
+    .pain-grid,
+    .setup-grid,
+    .finance-grid,
+    .ask-grid,
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tech-grid,
+    .arch-grid,
+    .flip-grid,
+    .conclusion-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .impact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .journey-step {
+        width: 45%;
+    }
+    
+    .diagram-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .connector {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    p { font-size: 1rem; }
+    
+    .slide {
+        padding: 1rem 3%;
+    }
+    
+    .content-card {
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+    }
+    
+    .tech-grid,
+    .arch-grid,
+    .flip-grid,
+    .conclusion-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .journey-step {
+        width: 100%;
+    }
+    
+    .timeline-track {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .timeline-track::before,
+    .timeline-track::after {
+        display: none;
+    }
+    
+    .timeline-node {
+        width: 100%;
+    }
+    
+    .flip-card {
+        height: 180px;
+    }
+    
+    .nav-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
     }
 
-    100% {
-        transform: scale(1.5);
-        opacity: 0;
+    .logo-container {
+        top: 1rem;
+        right: 1rem;
+    }
+    
+    .benchmark-table {
+        font-size: 0.85rem;
+    }
+    
+    .benchmark-table th,
+    .benchmark-table td {
+        padding: 0.6rem;
     }
 }

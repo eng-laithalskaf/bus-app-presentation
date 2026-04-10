@@ -5,17 +5,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عرض منظومة Bus App - وزارة النقل</title>
+    <meta name="description"
+        content="عرض تقديمي لمشروع منظومة Bus App لأتمتة مراكز انطلاق البولمان - وزارة النقل السورية">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+    <!-- Particle Background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Progress Bar -->
     <div class="progress-bar" id="progressBar"></div>
 
+    <!-- Logo -->
     <div class="logo-container">
         <div class="badge">نظام وطني</div>
         <div class="logo-text">BUS APP</div>
     </div>
+
+    <!-- Fullscreen Button -->
+    <div class="fullscreen-btn" onclick="toggleFullscreen()" title="شاشة كاملة (F)">
+        <i class="fas fa-expand"></i>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter" id="slideCounter">1 / 16</div>
 
     <!-- Speaker Notes Toggle -->
     <div class="speaker-notes-toggle" id="notesToggle" title="إظهار ملاحظات المتحدث (N)">
@@ -24,9 +39,7 @@
 
     <!-- Speaker Notes Panel -->
     <div class="speaker-notes-panel" id="notesPanel">
-        <div class="speaker-notes-content" id="notesContent">
-            <!-- Notes populated by JS -->
-        </div>
+        <div class="speaker-notes-content" id="notesContent"></div>
     </div>
 
     <!-- Impact Modal Overlay -->
@@ -60,131 +73,220 @@
         <img src="hero.png" class="hero-bg" alt="Futuristic Transport">
 
 
-        <!-- Slide 1: Title -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 1: العنوان الرئيسي
+             ═══════════════════════════════════════════ -->
         <div class="slide active" id="slide1">
-            <div class="content-card" style="text-align: center;">
-                <p style="color: var(--gold); font-weight: bold; font-size: 1.8rem; margin-bottom: 0.5rem;">الجمهورية العربية السورية | وزارة النقل</p>
-                <h1>نحو حوكمة رقمية لقطاع النقل البري<br><span class="gold-text">مشروع أتمتة مراكز الانطلاق (Bus App)</span></h1>
-                <p>رؤية وطنية شاملة لتطوير عمل مؤسسات "البولمان" وحماية الموارد المتسربة</p>
-                <div style="margin-top: 3rem; border-top: 1px solid var(--glass-border); padding-top: 2rem;">
-                    <p style="font-size: 1.2rem; font-weight: bold;">عرض مُقدّم إلى معالي وزير النقل المحترم</p>
-                    <p style="font-size: 1rem; opacity: 0.7;">2026</p>
+            <div class="content-card text-center">
+                <p class="slide-republic anim" style="--anim-order: 0">الجمهورية العربية السورية | وزارة النقل</p>
+                <h1 class="anim" style="--anim-order: 1">نحو حوكمة رقمية لقطاع النقل البري<br>
+                    <span class="gradient-text">مشروع أتمتة مراكز الانطلاق (Bus App)</span>
+                </h1>
+                <p class="anim" style="--anim-order: 2">رؤية وطنية شاملة لتطوير عمل مؤسسات النقل البري وحماية الموارد
+                    المتسربة</p>
+                <div class="slide-footer anim" style="--anim-order: 3">
+                    <p class="presenter-name">مشروع مقدم من فريق Bus App إلى معالي وزير النقل المحترم</p>
+                    <p class="date-text">الربع الثاني – 2026</p>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "معالي الوزير المحترم، السادة الحضور… السلام عليكم ورحمة الله. نعرض على سيادتكم اليوم مشروعاً وطنياً خالصاً، يهدف إلى نقل خطوط النقل بين المحافظات ومراكز انطلاق البولمان من حالة التخبط والعشوائية الورقية إلى حوكمة رقمية مؤسسية تليق بتطلعات الوزارة ورؤيتها للمرحلة القادمة."
+                معالي الوزير المحترم، السادة الحضور… السلام عليكم ورحمة الله وبركاته. يسعدنا أن نعرض على سيادتكم اليوم
+                مشروعاً وطنياً خالصاً، يهدف إلى نقل خطوط النقل بين المحافظات ومراكز انطلاق البولمان من حالة العشوائية
+                الورقية إلى حوكمة رقمية مؤسسية تليق بتطلعات الوزارة ورؤيتها للمرحلة القادمة. سنستعرض في هذا العرض واقع
+                القطاع الحالي، والحل الذي نقدمه، ونموذج الشراكة المقترح.
             </div>
         </div>
 
 
-        <!-- Slide 2: Crisis -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 2: من نحن (جديدة)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide2">
             <div class="content-card">
-                <h2>الواقع الحالي في مراكز انطلاق البولمان</h2>
-                <div class="pain-grid">
-                    <div class="pain-card">
-                        <h3><i class="fas fa-users-slash"></i> فوضى السماسرة والمكاتب</h3>
-                        <p>اكتظاظ عشوائي للمسافرين وتدخل "السماسرة" لترويج الرحلات بصورة غير حضارية، مما يسيء لصورة الكراج.</p>
+                <h2 class="anim" style="--anim-order: 0">من نحن: الفريق والكفاءات</h2>
+                <div class="about-grid">
+                    <div class="about-card anim" style="--anim-order: 1">
+                        <i class="fas fa-code" style="color: var(--accent);"></i>
+                        <div>
+                            <h3>فريق تطوير متكامل</h3>
+                            <p>فريق هندسة برمجيات متخصص في تطوير تطبيقات الهاتف المحمول ومنصات الويب، بخبرة في بناء
+                                أنظمة حجز وإدارة النقل.</p>
+                        </div>
                     </div>
-                    <div class="pain-card">
-                        <h3><i class="fas fa-file-excel"></i> الاعتماد على المانيفست الورقي</h3>
-                        <p>اعتماد شبه كلي على الأوراق القابلة للتلاعب، ما يعيق عمل شرطة المرور ويضيع حقوق الوزارة الضريبية.</p>
+                    <div class="about-card anim" style="--anim-order: 2">
+                        <i class="fas fa-mobile-alt" style="color: var(--gold);"></i>
+                        <div>
+                            <h3>منتج جاهز وقيد التشغيل</h3>
+                            <p>تطبيقات الراكب والسائق ولوحات تحكم الشركات والإدارة مبنية ومختبرة وجاهزة للإطلاق الفعلي
+                                في السوق المحلي.</p>
+                        </div>
                     </div>
-                    <div class="pain-card">
-                        <h3><i class="fas fa-eye-slash"></i> غياب الرؤية المركزية</h3>
-                        <p>عدم وجود منصة تتيح للوزارة إحصاء عدد الركاب الفعلي أو مراقبة وتيرة انطلاق الشركات بدقة لحظية.</p>
+                    <div class="about-card anim" style="--anim-order: 3">
+                        <i class="fas fa-server" style="color: var(--success);"></i>
+                        <div>
+                            <h3>بنية تحتية مستقلة</h3>
+                            <p>خوادم ومعدات تقنية مؤمنة بالكامل على عاتق الفريق، دون أي عبء مالي أو تقني على الوزارة.
+                            </p>
+                        </div>
                     </div>
-                    <div class="pain-card">
-                        <h3><i class="fas fa-hourglass-half"></i> استنزاف طاقة المواطن</h3>
-                        <p>الاضطرار للسفر والانتظار لساعات في الكراج لحجز تذكرة، دون ضمان توفرها أو معرفة موعد يقيني للانطلاق.</p>
+                    <div class="about-card anim" style="--anim-order: 4">
+                        <i class="fas fa-handshake" style="color: var(--secondary);"></i>
+                        <div>
+                            <h3>شراكة لا تعاقد</h3>
+                            <p>نؤمن أن نجاح المشروع يتطلب شراكة حقيقية مع الوزارة، وليس مجرد عقد خدمات تقنية تقليدي.</p>
+                        </div>
                     </div>
+                </div>
+                <div class="about-mission anim" style="--anim-order: 5">
+                    <p><i class="fas fa-bullseye" style="color: var(--gold); margin-left: 0.5rem;"></i>
+                        مهمتنا: بناء منظومة وطنية تحقق الحوكمة الرقمية لقطاع النقل البري، بتكلفة صفرية على الدولة.</p>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "معالي الوزير، نعلم جميعاً التحديات اليومية في كراجات البولمان بالمحافظات؛ ظاهرة السماسرة على أبواب المكاتب، والاعتماد السلبي على المانيفست الورقي الذي يخلق ثغرات رقابية. المواطن مرهق، وشرطة المرور تواجه عناءً في التدقيق، والوزارة تفتقد لوحة تحكم مركزية تضبط هذا العصب الحيوي."
+                قبل الدخول في تفاصيل المشروع، نود التعريف بفريق العمل. نحن فريق تطوير برمجي سوري متخصص في أنظمة إدارة
+                النقل. المنتج الذي سنعرضه اليوم ليس فكرة على ورق، بل منظومة متكاملة مبنية ومختبرة وجاهزة للتشغيل الفعلي.
+                نمتلك بنيتنا التحتية التقنية بالكامل، ولن يتحمل الميزانية الحكومية أي أعباء. نحن هنا لطرح شراكة
+                استراتيجية تخدم مصلحة الوزارة والمواطن على حد سواء.
             </div>
         </div>
 
 
-        <!-- Slide 3: International Benchmarking -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 3: الواقع الحالي (موسّعة)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide3">
             <div class="content-card">
-                <h2>المقارنة المعيارية للأداء (Benchmarking)</h2>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 2rem; background: rgba(0,0,0,0.2);">
+                <h2 class="anim" style="--anim-order: 0">الواقع الحالي في مراكز انطلاق البولمان</h2>
+                <div class="pain-grid pain-grid--3col">
+                    <div class="pain-card anim" style="--anim-order: 1">
+                        <h3><i class="fas fa-users-slash"></i> فوضى السماسرة والمكاتب</h3>
+                        <p>اكتظاظ عشوائي للمسافرين وتدخل السماسرة لترويج الرحلات بصورة غير حضارية، مما يسيء لصورة مراكز
+                            الانطلاق.</p>
+                    </div>
+                    <div class="pain-card anim" style="--anim-order: 2">
+                        <h3><i class="fas fa-file-excel"></i> المانيفست الورقي</h3>
+                        <p>اعتماد شبه كلي على الأوراق القابلة للتلاعب، ما يعيق عمل شرطة المرور ويضيع حقوق الوزارة
+                            الضريبية.</p>
+                    </div>
+                    <div class="pain-card anim" style="--anim-order: 3">
+                        <h3><i class="fas fa-eye-slash"></i> غياب الرؤية المركزية</h3>
+                        <p>عدم وجود منصة تتيح للوزارة إحصاء عدد الركاب الفعلي أو مراقبة وتيرة انطلاق الشركات بدقة لحظية.
+                        </p>
+                    </div>
+                    <div class="pain-card anim" style="--anim-order: 4">
+                        <h3><i class="fas fa-hourglass-half"></i> استنزاف طاقة المواطن</h3>
+                        <p>الاضطرار للسفر والانتظار لساعات في الكراج لحجز تذكرة، دون ضمان توفرها أو معرفة موعد يقيني
+                            للانطلاق.</p>
+                    </div>
+                    <div class="pain-card anim" style="--anim-order: 5">
+                        <h3><i class="fas fa-user-shield"></i> غياب التوثيق الأمني</h3>
+                        <p>عدم وجود آلية رقمية لتوثيق هوية الركاب وربطها بالرحلات، مما يُضعف المتابعة الأمنية على
+                            الطرقات.</p>
+                    </div>
+                    <div class="pain-card anim" style="--anim-order: 6">
+                        <h3><i class="fas fa-chart-bar"></i> انعدام بيانات التخطيط</h3>
+                        <p>غياب أي إحصاءات رقمية تمكّن الوزارة من بناء خطط تطوير مبنية على حقائق واقعية لقطاع النقل.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                معالي الوزير، نعلم جميعاً التحديات اليومية في كراجات البولمان بالمحافظات. ظاهرة السماسرة على أبواب
+                المكاتب، والاعتماد الكامل على المانيفست الورقي الذي يخلق ثغرات رقابية واسعة. المواطن مرهق من الانتظار
+                العشوائي، وشرطة المرور تواجه صعوبة في التدقيق الميداني. فضلاً عن غياب التوثيق الأمني الرقمي لهوية
+                الراكب، وافتقاد الوزارة لأي بيانات إحصائية تمكنها من التخطيط الاستراتيجي. هذا الواقع لم يعد مقبولاً في
+                ظل تطلعات الحكومة نحو التحول الرقمي.
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════════
+             SLIDE 4: المقارنة المعيارية (موسّعة)
+             ═══════════════════════════════════════════ -->
+        <div class="slide" id="slide4">
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order: 0">المقارنة المعيارية للأداء (Benchmarking)</h2>
+                <table class="benchmark-table anim" style="--anim-order: 1">
                     <thead>
-                        <tr style="background: rgba(255, 215, 0, 0.1); color: var(--gold); text-align: right;">
-                            <th style="padding: 1rem; border-bottom: 2px solid var(--gold);">المعيار</th>
-                            <th style="padding: 1rem; border-bottom: 2px solid var(--gold);">الوضع الحالي (محلياً)</th>
-                            <th style="padding: 1rem; border-bottom: 2px solid var(--gold);">دول الجوار (السعودية/تركيا)
-                            </th>
-                            <th style="padding: 1rem; border-bottom: 2px solid var(--gold);">منظومة Bus App</th>
+                        <tr>
+                            <th>المعيار</th>
+                            <th>الوضع الحالي (محلياً)</th>
+                            <th>دول الجوار (السعودية / تركيا)</th>
+                            <th>منظومة Bus App</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border);">حجز التذاكر</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border); color: #ff6b6b;">
-                                ورقي وحضوري</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border);">منصات موحدة
-                                (SAPTCO/Obilet)</td>
-                            <td
-                                style="padding: 1rem; border-bottom: 1px solid var(--glass-border); color: var(--success); font-weight: bold;">
-                                رقمي 100% وطني</td>
+                            <td>حجز التذاكر</td>
+                            <td class="status-bad">ورقي وحضوري</td>
+                            <td>منصات موحدة (SAPTCO / Obilet)</td>
+                            <td class="status-good">رقمي 100% وطني</td>
                         </tr>
                         <tr>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border);">الرقابة الحكومية
-                            </td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border); color: #ff6b6b;">
-                                متقطعة وضعيفة</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border);">مركزية عبر أجهزة
-                                التتبع</td>
-                            <td
-                                style="padding: 1rem; border-bottom: 1px solid var(--glass-border); color: var(--success); font-weight: bold;">
-                                لحظية عبر Dashboards</td>
+                            <td>الرقابة الحكومية</td>
+                            <td class="status-bad">متقطعة وضعيفة</td>
+                            <td>مركزية عبر أجهزة التتبع</td>
+                            <td class="status-good">لحظية عبر Dashboards</td>
                         </tr>
                         <tr>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border);">هوية الراكب
-                                والمراقبة</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border); color: #ff6b6b;">غير
-                                موثقة بدقة</td>
-                            <td style="padding: 1rem; border-bottom: 1px solid var(--glass-border);">مربوطة بالرقم
-                                القومي</td>
-                            <td
-                                style="padding: 1rem; border-bottom: 1px solid var(--glass-border); color: var(--success); font-weight: bold;">
-                                توثيق ذكي بـ QR</td>
+                            <td>هوية الراكب والمراقبة</td>
+                            <td class="status-bad">غير موثقة بدقة</td>
+                            <td>مربوطة بالرقم القومي</td>
+                            <td class="status-good">توثيق ذكي بـ QR</td>
+                        </tr>
+                        <tr>
+                            <td>إدارة الشكاوى</td>
+                            <td class="status-bad">شفهية وغير منظمة</td>
+                            <td>أنظمة تذاكر دعم رقمية</td>
+                            <td class="status-good">سجل رقمي مربوط بالرحلة</td>
+                        </tr>
+                        <tr>
+                            <td>الدفع الإلكتروني</td>
+                            <td class="status-bad">نقدي بالكامل</td>
+                            <td>بوابات دفع متعددة</td>
+                            <td class="status-good">دفع إلكتروني ونقدي موثق</td>
+                        </tr>
+                        <tr>
+                            <td>البيانات وصنع القرار</td>
+                            <td class="status-bad">بيانات شبه معدومة</td>
+                            <td>تحليلات مركزية</td>
+                            <td class="status-good">تقارير ذكية لحظية</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "بالتطلع إلى دول الجوار التي طبقت أنظمة مشابهة، نجد أن الانتقال للنظام الرقمي الموحد أصبح المعيار
-                العالمي. منظومتنا توفر هذه المعايير ببناء مخصص يناسب بيئتنا التشريعية والتقنية المحلية."
+                بالتطلع إلى دول الجوار التي طبقت أنظمة مشابهة – مثل شركة SAPTCO في المملكة العربية السعودية ومنصة Obilet
+                في تركيا – نجد أن الانتقال للنظام الرقمي الموحد أصبح المعيار الدولي. المقارنة توضح بجلاء الفجوة الكبيرة
+                في ستة معايير أساسية. منظومة Bus App تغطي جميع هذه المعايير ببناء مخصص يراعي البيئة التشريعية والتقنية
+                المحلية، من الحجز الرقمي إلى التقارير الذكية.
             </div>
         </div>
 
 
-        <!-- Slide 4: Solution -->
-        <div class="slide" id="slide4">
+        <!-- ═══════════════════════════════════════════
+             SLIDE 5: الرؤية الاستراتيجية (تفاعلية)
+             ═══════════════════════════════════════════ -->
+        <div class="slide" id="slide5">
             <div class="content-card">
-                <h2>الرؤية الاستراتيجية: التحول المؤسسي</h2>
-                <p>اضغط على أي طرف لاستكشاف أثر المنظومة عليه:</p>
-                <div class="diagram-container">
+                <h2 class="anim" style="--anim-order: 0">الرؤية الاستراتيجية: شراكة للتحول المؤسسي</h2>
+                <p class="anim" style="--anim-order: 1">اضغط على أي طرف لاستكشاف أثر المنظومة عليه:</p>
+                <div class="diagram-container anim" style="--anim-order: 2">
                     <div class="clickable-node" onclick="showImpact('citizen')">
-                        <div class="node">
+                        <div class="node pulse">
                             <i class="fas fa-user"></i>
                             <span>المواطن</span>
                         </div>
                     </div>
                     <div class="connector" style="width: 20%; left: 25%;"></div>
                     <div class="clickable-node" onclick="showImpact('state')">
-                        <div class="node" style="border-color: var(--gold);">
+                        <div class="node node--gold pulse">
                             <i class="fas fa-landmark"></i>
                             <span>وزارة النقل</span>
                         </div>
                     </div>
                     <div class="connector" style="width: 20%; right: 25%;"></div>
                     <div class="clickable-node" onclick="showImpact('company')">
-                        <div class="node">
+                        <div class="node pulse">
                             <i class="fas fa-building"></i>
                             <span>شركات النقل</span>
                         </div>
@@ -192,547 +294,506 @@
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "لم نأتِ بعرض تطبيق حجز تقليدي. جئنا بمنظومة إدارة مؤسسية متكاملة تحول القطاع من العشوائية إلى الحوكمة
-                الرقمية. المنظومة تربط المواطن والشركة والوزارة في منصة واحدة. اطلب من معاليكم النقر على أي من الأطراف
-                الظاهرة لرؤية كيف سيتغير واقعهم تماماً مع Bus App."
+                لم نأتِ بعرض تطبيق حجز تقليدي. ما نقدمه هو منظومة إدارة مؤسسية متكاملة تحوّل القطاع من العشوائية إلى
+                الحوكمة الرقمية. المنظومة تربط ثلاثة أطراف رئيسية في منصة واحدة: المواطن المسافر، وزارة النقل كجهة
+                رقابية وتنظيمية، وشركات النقل كجهة تشغيلية. نرجو من معاليكم النقر على أي من الأطراف الظاهرة لرؤية كيف
+                سيتغير واقعهم مع تطبيق المنظومة.
             </div>
         </div>
 
 
-        <!-- Slide 5: Use Case - Citizen -->
-        <div class="slide" id="slide5">
-            <div class="content-card">
-                <h2>نموذج عملي (1): رحلة المواطن "ليث"</h2>
-                <div
-                    style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; text-align: right;">
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; width: 30%; border-right: 3px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <span style="color: var(--accent); font-weight: bold;">الخطوة 1:</span><br> يفتح التطبيق، ويبحث
-                        عن رحلة (دمشق ← حلب) وتحديد <strong style="color: white">عدد المسافرين</strong>.
-                    </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; width: 30%; border-right: 3px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <span style="color: var(--accent); font-weight: bold;">الخطوة 2:</span><br> يقارن المواعيد
-                        والأسعار،
-                        ثم يستعرض <strong style="color: white">مخطط الباص لاختيار المقاعد</strong>.
-                    </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; width: 30%; border-right: 3px solid var(--gold); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <span style="color: var(--gold); font-weight: bold;">الخطوة 3:</span><br> يدفع إلكترونياً،
-                        ويستلم تذكرة رقمية بصيغة QR Code.
-                    </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; width: 30%; border-right: 3px solid var(--gold); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <span style="color: var(--gold); font-weight: bold;">الخطوة 4:</span><br> يأتي للكراج في 9:45
-                        ويتوجه مباشرة للباص بحد ذاته.
-                    </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; width: 30%; border-right: 3px solid var(--success); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <span style="color: var(--success); font-weight: bold;">الخطوة 5:</span><br> يمسح السائق تذكرته
-                        (QR) وتُطبع تذكرة إيصال حرارية فورية.
-                    </div>
-                    <div
-                        style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; width: 30%; border-right: 3px solid var(--success); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <span style="color: var(--success); font-weight: bold;">الخطوة 6:</span><br> ينطلق الباص بموعده
-                        الموثق ويصل بكرامة وأمان تزامناً مع الوقت 3:00.
-                    </div>
-                </div>
-            </div>
-            <div class="speaker-note-data" style="display:none;">
-                "بالتطبيق العملي: المواطن ليث قام بكل الخطوات من منزله، تجنب الابتزاز وتزاحم الكراج، وصعد حافلته بيقين
-                وهدوء مستعرضاً الـ QR من هاتفه الذكي. هذا هو الارتقاء بجودة الحياة."
-            </div>
-        </div>
-
-
-        <!-- Slide 6: Use Case - Company -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 6: رحلة المواطن (صياغة محسنة)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide6">
             <div class="content-card">
-                <h2>نموذج عملي (2): محاكاة إعداد شركة نقل</h2>
-                <div class="tech-grid"
-                    style="grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; text-align: right;">
-                    <div class="tech-box"
-                        style="padding: 1.5rem; display: flex; align-items: flex-start; gap: 1.5rem; text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                        <i class="fas fa-bus-alt" style="font-size: 3rem; color: var(--accent); margin-bottom: 0;"></i>
+                <h2 class="anim" style="--anim-order: 0">نموذج عملي (1): رحلة المواطن عبر المنظومة</h2>
+                <div class="journey-grid">
+                    <div class="journey-step anim" style="--anim-order: 1">
+                        <span class="step-label step-label--accent">الخطوة 1: البحث</span>
+                        <p>يفتح التطبيق ويبحث عن رحلة (دمشق ← حلب) مع تحديد <strong style="color: white">عدد
+                                المسافرين</strong>.</p>
+                    </div>
+                    <div class="journey-step anim" style="--anim-order: 2">
+                        <span class="step-label step-label--accent">الخطوة 2: المقارنة والاختيار</span>
+                        <p>يقارن المواعيد والأسعار، ثم يستعرض <strong style="color: white">مخطط الباص لاختيار
+                                المقاعد</strong>.</p>
+                    </div>
+                    <div class="journey-step journey-step--gold anim" style="--anim-order: 3">
+                        <span class="step-label step-label--gold">الخطوة 3: الحجز والدفع</span>
+                        <p>يدفع إلكترونياً ويستلم تذكرة رقمية بصيغة QR Code فورياً على هاتفه.</p>
+                    </div>
+                    <div class="journey-step journey-step--gold anim" style="--anim-order: 4">
+                        <span class="step-label step-label--gold">الخطوة 4: الوصول المباشر</span>
+                        <p>يتوجه إلى الكراج في الموعد المحدد ماشياً مباشرة إلى حافلته دون الحاجة لصالة الانتظار.</p>
+                    </div>
+                    <div class="journey-step journey-step--success anim" style="--anim-order: 5">
+                        <span class="step-label step-label--success">الخطوة 5: التحقق الرقمي</span>
+                        <p>يمسح السائق تذكرته (QR) وتُطبع تذكرة إيصال حرارية رسمية فورياً.</p>
+                    </div>
+                    <div class="journey-step journey-step--success anim" style="--anim-order: 6">
+                        <span class="step-label step-label--success">الخطوة 6: الانطلاق الموثق</span>
+                        <p>ينطلق الباص في موعده المحدد بمانيفست رقمي كامل يتضمن بيانات جميع الركاب.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                لنتخيل سيناريو يومياً واقعياً: مواطن سوري يريد السفر من دمشق إلى حلب. بدلاً من الذهاب مبكراً للكراج
+                والانتظار لساعات في بيئة مزدحمة وعشوائية، يقوم بكل خطوات الحجز من منزله عبر التطبيق. يختار الرحلة
+                والمقعد، ويدفع إلكترونياً، ثم يتوجه في الموعد مباشرة إلى حافلته. السائق يتحقق من التذكرة رقمياً بمسح QR،
+                وينطلق الباص بمانيفست رقمي كامل. هذا يمثل نقلة نوعية في جودة الخدمة المقدمة للمواطن.
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════════
+             SLIDE 7: محاكاة إعداد شركة نقل
+             ═══════════════════════════════════════════ -->
+        <div class="slide" id="slide7">
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order: 0">نموذج عملي (2): محاكاة إعداد شركة نقل</h2>
+                <div class="setup-grid">
+                    <div class="setup-card anim" style="--anim-order: 1">
+                        <i class="fas fa-bus-alt" style="color: var(--accent);"></i>
                         <div>
-                            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: white;">1. هندسة الأسطول
-                                والكوادر</h3>
-                            <p style="font-size: 1rem; opacity: 0.8; margin: 0; line-height: 1.6;">
-                                إدخال بيانات الحافلات (سعة المقاعد، VIP/عادي).<br>
-                                توثيق هويات السائقين وربطهم برخص القيادة لضبط الأمان.
-                            </p>
+                            <h3>1. هندسة الأسطول والكوادر</h3>
+                            <p>إدخال بيانات الحافلات (سعة المقاعد، VIP/عادي).<br>
+                                توثيق هويات السائقين وربطهم برخص القيادة لضبط الأمان.</p>
                         </div>
                     </div>
-                    <div class="tech-box"
-                        style="padding: 1.5rem; display: flex; align-items: flex-start; gap: 1.5rem; text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                        <i class="fas fa-route" style="font-size: 3rem; color: var(--gold); margin-bottom: 0;"></i>
+                    <div class="setup-card anim" style="--anim-order: 2">
+                        <i class="fas fa-route" style="color: var(--gold);"></i>
                         <div>
-                            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: white;">2. تخطيط المسارات
-                                والتسعير</h3>
-                            <p style="font-size: 1rem; opacity: 0.8; margin: 0; line-height: 1.6;">
-                                تعريف خطوط السير (مثال: دمشق ← حمص ← حلب).<br>
-                                تثبيت أسعار التذاكر لكل محطة لمنع التلاعب والأهواء الشخصية.
-                            </p>
+                            <h3>2. تخطيط المسارات والتسعير</h3>
+                            <p>تعريف خطوط السير (مثال: دمشق ← حمص ← حلب).<br>
+                                تثبيت أسعار التذاكر لكل محطة لمنع التلاعب والأهواء الشخصية.</p>
                         </div>
                     </div>
-                    <div class="tech-box"
-                        style="padding: 1.5rem; display: flex; align-items: flex-start; gap: 1.5rem; text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                        <i class="fas fa-mobile-alt"
-                            style="font-size: 3rem; color: var(--success); margin-bottom: 0;"></i>
+                    <div class="setup-card anim" style="--anim-order: 3">
+                        <i class="fas fa-mobile-alt" style="color: var(--success);"></i>
                         <div>
-                            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: white;">3. تجهيز الأدوات
-                                الميدانية</h3>
-                            <p style="font-size: 1rem; opacity: 0.8; margin: 0; line-height: 1.6;">
-                                تسليم تطبيق السائقين والطابعات الحرارية (Bluetooth).<br>
-                                تحويل السائق إلى نقطة تحقق رقمية (Mobile Point of Sale).
-                            </p>
+                            <h3>3. تجهيز الأدوات الميدانية</h3>
+                            <p>تسليم تطبيق السائقين والطابعات الحرارية (Bluetooth).<br>
+                                تحويل السائق إلى نقطة تحقق رقمية (Mobile Point of Sale).</p>
                         </div>
                     </div>
-                    <div class="tech-box"
-                        style="padding: 1.5rem; display: flex; align-items: flex-start; gap: 1.5rem; text-align: right; border: 1px solid rgba(255,255,255,0.1);">
-                        <i class="fas fa-desktop" style="font-size: 3rem; color: #8e44ad; margin-bottom: 0;"></i>
+                    <div class="setup-card anim" style="--anim-order: 4">
+                        <i class="fas fa-desktop" style="color: var(--secondary);"></i>
                         <div>
-                            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: white;">4. الإدارة والتشغيل
-                                المؤسسي</h3>
-                            <p style="font-size: 1rem; opacity: 0.8; margin: 0; line-height: 1.6;">
-                                صدور "المانيفست الرقمي" آلياً دون الحاجة لموظف قطع تذاكر تقليدي.<br>
-                                مراقبة مسار وحالة الرحلات لحظياً عبر شاشات التحكم.
-                            </p>
+                            <h3>4. الإدارة والتشغيل المؤسسي</h3>
+                            <p>صدور المانيفست الرقمي آلياً دون الحاجة لموظف قطع تذاكر تقليدي.<br>
+                                مراقبة مسار وحالة الرحلات لحظياً عبر شاشات التحكم.</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "بالنسبة لشركات النقل، ننتقل بالشركة من عشوائية التسيير اليومي إلى هندسة مؤسسية متكاملة: أسطول موثق،
-                سائقون معرفون أمنياً ومهنياً، مسارات ذات تسعيرة ثابتة غير قابلة للتلاعب، لتتوج العملية باستخراج مانيفست
-                رقمي دقيق دون أي أخطاء بشرية."
+                بالنسبة لشركات النقل، ننتقل بالشركة من عشوائية التسيير اليومي إلى هندسة مؤسسية متكاملة: أسطول موثق بكامل
+                تفاصيله، سائقون معرّفون أمنياً ومهنياً، مسارات ذات تسعيرة ثابتة وشفافة غير قابلة للتلاعب. العملية تتوج
+                باستخراج مانيفست رقمي دقيق بلا أخطاء بشرية. المنظومة توفر على الشركة تكاليف الموظفين التقليديين وتحمي
+                إيراداتها من التسرب.
             </div>
         </div>
 
 
-        <!-- Slide 7: Technology -->
-        <div class="slide" id="slide7">
+        <!-- ═══════════════════════════════════════════
+             SLIDE 8: التقنيات والميزات الميدانية
+             ═══════════════════════════════════════════ -->
+        <div class="slide" id="slide8">
             <div class="content-card">
-                <h2>التقنيات والميزات الميدانية</h2>
-                <p>اضغط على أي تقنية لتجربتها:</p>
+                <h2 class="anim" style="--anim-order: 0">التقنيات والميزات الميدانية</h2>
+                <p class="anim" style="--anim-order: 1">اضغط على أي تقنية لتجربتها:</p>
                 <div class="tech-grid">
-                    <div class="tech-box" onclick="simulateScan(this)">
+                    <div class="tech-box anim" style="--anim-order: 2" onclick="simulateScan(this)">
                         <div class="scan-line"></div>
                         <i class="fas fa-qrcode"></i>
                         <h3>تفتيش ذكي (QR)</h3>
-                        <p style="font-size: 1rem; margin-top: 1rem;">حماية الرحلات من الركاب غير المسجلين</p>
+                        <p>حماية الرحلات من الركاب غير المسجلين</p>
                     </div>
-                    <div class="tech-box"
-                        onclick="this.style.transform='scale(1.05)'; setTimeout(()=>this.style.transform='', 300)">
+                    <div class="tech-box anim" style="--anim-order: 3" onclick="techBounce(this)">
                         <i class="fas fa-print"></i>
                         <h3>طباعة حرارية فورية</h3>
-                        <p style="font-size: 1rem; margin-top: 1rem;">تذاكر رسمية عبر البلوتوث للسائق</p>
+                        <p>تذاكر رسمية عبر البلوتوث للسائق</p>
                     </div>
-                    <div class="tech-box"
-                        onclick="this.style.transform='scale(1.05)'; setTimeout(()=>this.style.transform='', 300)">
+                    <div class="tech-box anim" style="--anim-order: 4" onclick="techBounce(this)">
                         <i class="fas fa-chart-line"></i>
                         <h3>لوحات تحكم (Dashboards)</h3>
-                        <p style="font-size: 1rem; margin-top: 1rem;">مراقبة حية للأداء والأموال</p>
+                        <p>مراقبة حية للأداء والعمليات المالية</p>
                     </div>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "Bus App مبرمج بأحدث المعايير العالمية. يغطي كامل دورة العملية: من إدخال الباص والسائق وتعريف المسار،
-                مروراً بحجز المواطن من المنزل، وصولاً إلى طباعة التذكرة حرارياً في الكراج وتفتيشها إلكترونياً على الطريق
-                لمنع أي تلاعب."
+                من الناحية التقنية، منظومة Bus App مبنية بأحدث المعايير العالمية في تطوير البرمجيات. تغطي كامل دورة
+                العملية التشغيلية: من إدخال بيانات الحافلات والسائقين وتعريف المسارات، مروراً بحجز المواطن من منزله
+                واستلام تذكرته الرقمية، وصولاً إلى طباعة التذكرة الحرارية في الكراج وتفتيشها إلكترونياً على الطريق لمنع
+                أي تلاعب أو ركوب غير مشروع.
             </div>
         </div>
 
 
-        <!-- Slide 8: Commitment -->
-        <div class="slide" id="slide8">
-            <div class="content-card">
-                <h2>لماذا ستلتزم الشركات بالمنظومة؟</h2>
-                <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
-                    <div class="pain-card"
-                        style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 4px solid var(--gold);">
-                        <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--gold);"></i>
-                        <div>
-                            <h3 style="margin-bottom: 0.5rem;">حماية الإيرادات (المانع للتلاعب)</h3>
-                            <p style="margin: 0;">يوقف فوراً ظاهرة "الجباية" اليدوية خارج الصندوق المالي للشركة.</p>
-                        </div>
-                    </div>
-                    <div class="pain-card"
-                        style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 4px solid var(--accent);">
-                        <i class="fas fa-chart-pie" style="font-size: 2.5rem; color: var(--accent);"></i>
-                        <div>
-                            <h3 style="margin-bottom: 0.5rem;">أتمتة وحوكمة إدارية</h3>
-                            <p style="margin: 0;">تقارير مالية وتدقيق آلي دقيق يوفر مئات الساعات من الإدارة الورقية.</p>
-                        </div>
-                    </div>
-                    <div class="pain-card"
-                        style="display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border-left: 4px solid var(--success);">
-                        <i class="fas fa-award" style="font-size: 2.5rem; color: var(--success);"></i>
-                        <div>
-                            <h3 style="margin-bottom: 0.5rem;">صورة احترافية وتنافسية</h3>
-                            <p style="margin: 0;">الشركة التي تستخدم الحجز الإلكتروني تكتسب ثقة وراحة الركاب فوراً.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="speaker-note-data" style="display:none;">
-                "قد يتبادر سؤال: كيف نجبر الشركات؟ الإجابة: لن نجبر… سنخلق الحاجة. النظام يحمي أموالهم ويوفر عليهم
-                الجهد. نحتاج فقط قراراً تنظيمياً من الوزارة يجعل المنظومة الرسمية الوحيدة المعتمدة."
-            </div>
-        </div>
-
-
-        <!-- Slide 9: Financial Analysis -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 9: البنية التقنية والأمن السيبراني (جديدة)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide9">
             <div class="content-card">
-                <h2>التحليل المالي والعائد على الاستثمار (ROI)</h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
-                    <div class="pain-card" style="padding: 1.5rem; text-align: right;">
-                        <h3 style="color: #ff6b6b; margin-bottom: 1rem;"><i class="fas fa-coins"></i> التكلفة الإجمالية
-                        </h3>
-                        <ul style="list-style: none; padding: 0; line-height: 2;">
-                            <li><i class="fas fa-code" style="opacity: 0.5; width: 25px;"></i> تكلفة التطوير الأولي
-                                للنظام</li>
-                            <li><i class="fas fa-server" style="opacity: 0.5; width: 25px;"></i> البنية التحتية
-                                والاستضافة لـ 3 سنوات</li>
-                            <li><i class="fas fa-headset" style="opacity: 0.5; width: 25px;"></i> التشغيل والصيانة
-                                والدعم الفني</li>
-                            <li style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8; color: var(--accent);">*
-                                المشروع يعتمد نموذج SaaS، ما يلغي العبء المالي الكبير على الوزارة.</li>
-                        </ul>
+                <h2 class="anim" style="--anim-order: 0">البنية التقنية والأمن السيبراني</h2>
+                <div class="arch-grid">
+                    <div class="arch-card anim" style="--anim-order: 1">
+                        <i class="fas fa-layer-group" style="color: var(--accent);"></i>
+                        <h3>الواجهة الأمامية (Frontend)</h3>
+                        <p>تطبيقات موبايل أصلية (Android/iOS) ولوحات تحكم ويب متجاوبة بأحدث أطر العمل.</p>
                     </div>
-                    <div class="pain-card" style="padding: 1.5rem; border-color: var(--success); text-align: right;">
-                        <h3 style="color: var(--success); margin-bottom: 1rem;"><i class="fas fa-chart-bar"></i> العائد
-                            المتوقع (ROI)</h3>
-                        <ul style="list-style: none; padding: 0; line-height: 2;">
-                            <li><i class="fas fa-arrow-up" style="color: var(--success); width: 25px;"></i>
-                                <strong>توثيق ضريبي:</strong> زيادة حتمية بإيرادات الدولة.
-                            </li>
-                            <li><i class="fas fa-piggy-bank" style="color: var(--success); width: 25px;"></i>
-                                <strong>ترشيد المحروقات:</strong> تقليل الرحلات العشوائية والحد من الهدر.
-                            </li>
-                            <li><i class="fas fa-undo-alt" style="color: var(--success); width: 25px;"></i>
-                                <strong>تغطية التكلفة:</strong> استرداد التكلفة (Payback) خلال 18-24 شهراً.
-                            </li>
-                        </ul>
+                    <div class="arch-card anim" style="--anim-order: 2">
+                        <i class="fas fa-cogs" style="color: var(--secondary);"></i>
+                        <h3>الخادم الخلفي (Backend)</h3>
+                        <p>بنية خوادم قابلة للتوسع مع واجهات برمجة RESTful APIs مؤمنة ومشفرة بالكامل.</p>
+                    </div>
+                    <div class="arch-card arch-card--data anim" style="--anim-order: 3">
+                        <i class="fas fa-database" style="color: var(--gold);"></i>
+                        <h3>قواعد البيانات</h3>
+                        <p>قواعد بيانات علائقية مشفرة مع نسخ احتياطية يومية تلقائية ونظام استعادة سريع.</p>
+                    </div>
+                    <div class="arch-card arch-card--security anim" style="--anim-order: 4">
+                        <i class="fas fa-shield-alt" style="color: var(--success);"></i>
+                        <h3>تشفير البيانات</h3>
+                        <p>تشفير SSL/TLS لجميع الاتصالات، وتشفير البيانات الحساسة في حالة السكون (At Rest).</p>
+                    </div>
+                    <div class="arch-card arch-card--security anim" style="--anim-order: 5">
+                        <i class="fas fa-user-lock" style="color: var(--info);"></i>
+                        <h3>إدارة الصلاحيات</h3>
+                        <p>نظام أدوار متعدد المستويات (RBAC) يضمن وصول كل مستخدم فقط للبيانات المصرّح له بها.</p>
+                    </div>
+                    <div class="arch-card arch-card--security anim" style="--anim-order: 6">
+                        <i class="fas fa-flag" style="color: var(--error-light);"></i>
+                        <h3>سيادة البيانات</h3>
+                        <p>الخوادم يمكن استضافتها محلياً بناءً على توجيهات الوزارة لضمان السيادة الرقمية الكاملة.</p>
                     </div>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "التحليل المالي واضح: المشروع يمول نفسه ذاتياً من خلال ضبط الهدر ووقف التسرب المالي لكثير من الرحلات
-                العشوائية خارج الكراجات، مما يعزز الإيرادات الضريبية للدولة بشكل ملحوظ."
+                من الأهمية بمكان الحديث عن البنية التقنية والأمن السيبراني. يتكون النظام من ثلاث طبقات رئيسية: تطبيقات
+                الواجهة الأمامية للمستخدمين، خوادم خلفية قابلة للتوسع، وقواعد بيانات مشفرة بنسخ احتياطية يومية. على صعيد
+                الأمن، جميع الاتصالات مشفرة بمعيار SSL/TLS، والبيانات الحساسة مشفرة حتى في حالة السكون. نظام الصلاحيات
+                مبني على نموذج RBAC متعدد المستويات. والأهم: نحن مستعدون لاستضافة الخوادم محلياً وفق توجيهات الوزارة
+                لضمان السيادة الكاملة على البيانات الوطنية.
             </div>
         </div>
 
 
-        <!-- Slide 10: Data Methodology (Problem 1) -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 10: لماذا ستلتزم الشركات
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide10">
             <div class="content-card">
-                <h2>منهجية الأرقام والمصادر الدقيقة</h2>
-                <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem;">
-                    <div class="pain-card"
-                        style="border-right: 4px solid var(--accent); text-align: right; padding: 1.5rem;">
-                        <h3><i class="fas fa-clock" style="color: var(--accent);"></i> 2.5 مليون ساعة هدر</h3>
-                        <p><strong>المصدر:</strong> دراسة ميدانية استقصائية لعينة من 500 مسافر في كراجات دمشق. (متوسط
-                            الانتظار 1.5 - 2.5 ساعة للرحلة الواحدة) × (المسافرين سنوياً).</p>
+                <h2 class="anim" style="--anim-order: 0">لماذا ستلتزم الشركات بالمنظومة؟</h2>
+                <div class="compliance-list">
+                    <div class="compliance-item anim" style="--anim-order: 1">
+                        <i class="fas fa-shield-alt" style="color: var(--gold);"></i>
+                        <div>
+                            <h3>حماية الإيرادات (المانع للتلاعب)</h3>
+                            <p>يوقف فوراً ظاهرة الجباية اليدوية خارج الصندوق المالي للشركة ويحمي أموالها.</p>
+                        </div>
                     </div>
-                    <div class="pain-card"
-                        style="border-right: 4px solid var(--success); text-align: right; padding: 1.5rem;">
-                        <h3><i class="fas fa-chart-line" style="color: var(--success);"></i> 30% زيادة في الإيرادات</h3>
-                        <p><strong>المصدر:</strong> إسقاط مالي (Financial Projection) مبني على سد ثغرات "الجباية
-                            اليدوية" والتسرب المالي في الشركات بعد أتمتة الدفع والتفتيش.</p>
+                    <div class="compliance-item compliance-item--accent anim" style="--anim-order: 2">
+                        <i class="fas fa-chart-pie" style="color: var(--accent);"></i>
+                        <div>
+                            <h3>أتمتة وحوكمة إدارية</h3>
+                            <p>تقارير مالية وتدقيق آلي دقيق يوفر مئات الساعات من الإدارة الورقية سنوياً.</p>
+                        </div>
                     </div>
-                    <div class="pain-card"
-                        style="border-right: 4px solid var(--gold); text-align: right; padding: 1.5rem;">
-                        <h3><i class="fas fa-network-wired" style="color: var(--gold);"></i> 98% تخطيط رقمي</h3>
-                        <p><strong>المصدر:</strong> كفاءة النظام المعمارية (System Architecture) التي تمنع انطلاق أي باص
-                            دون توثيق مساره وبياناته على الخوادم المركزية.</p>
+                    <div class="compliance-item compliance-item--success anim" style="--anim-order: 3">
+                        <i class="fas fa-award" style="color: var(--success);"></i>
+                        <div>
+                            <h3>صورة احترافية وتنافسية</h3>
+                            <p>الشركة التي تستخدم الحجز الإلكتروني تكتسب ثقة وراحة الركاب وتتفوق تنافسياً.</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "معالي الوزير، صناعة القرار تتطلب أرقاماً دقيقة لا مجرد تقديرات. هذه الأرقام مستمدة من دراسات استقصائية
-                ميدانية وتقاطع بيانات دقيق لضمان واقعيتها وقابليتها للتطبيق في بيئتنا الحالية."
+                كيف نضمن تبني شركات النقل للمنظومة؟ من خلال خلق حاجة تجارية حقيقية. الشركات التي تستخدم النظام ستحمي
+                إيراداتها من التسرب المالي الناتج عن الجباية اليدوية، وستوفر تكاليف الإدارة الورقية، وستكسب ثقة الركاب
+                عبر خدمة حجز احترافية. أما الشركات التي لا تستخدم النظام فستجد صعوبة في إصدار المانيفست الرسمي المعتمد
+                مستقبلاً. نحن نحتاج فقط إلى الغطاء التنظيمي من الوزارة لحماية هذا النظام الرسمي.
             </div>
         </div>
 
 
-        <!-- Slide 11: Legal & Regulatory Framework -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 11: التحليل المالي (مُعدّل)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide11">
             <div class="content-card">
-                <h2>الإطار التنظيمي والقانوني المطلوب</h2>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
-                    <div class="pain-card" style="padding: 1.5rem; text-align: right;">
-                        <h3 style="color: var(--gold); margin-bottom: 1rem;"><i class="fas fa-gavel"></i> القرارات
-                            المرجوة</h3>
-                        <p style="opacity: 0.9; line-height: 1.8;">
-                            1. قرار وزاري باعتماد الإيصال المطبوع أو رمز QR <strong>كبديل إلزامي وقانوني</strong>
-                            للمانيفست الورقي.<br>
-                            2. فرض غرامات قانونية على الحمولات الزائدة أو الركاب غير المسجلين بالمنظومة المركزية.
-                        </p>
+                <h2 class="anim" style="--anim-order: 0">التحليل المالي (نموذج الشراكة المجانية)</h2>
+                <div class="finance-grid">
+                    <div class="finance-card finance-card--cost anim" style="--anim-order: 1">
+                        <h3><i class="fas fa-coins"></i> التكلفة الإجمالية (على الوزارة)</h3>
+                        <div class="zero-cost">
+                            <div class="zero-cost-number">0 <span class="zero-cost-unit">ل.س</span></div>
+                            <p class="zero-cost-label">«صفر تكلفة» على ميزانية الدولة</p>
+                        </div>
+                        <ul class="finance-list">
+                            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> شركتنا تتحمل كامل
+                                تكاليف البرمجة.</li>
+                            <li><i class="fas fa-check-circle" style="color: var(--success);"></i> استضافة السيرفرات
+                                والصيانة على عاتقنا.</li>
+                        </ul>
                     </div>
-                    <div class="pain-card" style="padding: 1.5rem; text-align: right; border-color: var(--accent);">
-                        <h3 style="color: var(--accent); margin-bottom: 1rem;"><i class="fas fa-shield-alt"></i> سيادة
-                            الخصوصية والبيانات</h3>
-                        <p style="opacity: 0.9; line-height: 1.8;">
-                            - <strong>الملكية:</strong> البيانات هي حق سيادي لوزارة النقل والدولة فقط ولا تشارك مع أي
-                            طرف ثالث.<br>
-                            - <strong>حماية المواطن:</strong> المنظومة تعتبر أمان البيانات الشخصية (Privacy Law) جزءاً
-                            من أمنها الأساسي.
-                        </p>
+                    <div class="finance-card finance-card--revenue anim" style="--anim-order: 2">
+                        <h3><i class="fas fa-chart-bar"></i> نموذج الربح والعائد المشترك</h3>
+                        <ul class="finance-list">
+                            <li><i class="fas fa-handshake" style="color: var(--gold);"></i>
+                                <strong>نموذج إيراد الشركة:</strong> من اشتراكات شركات النقل أو عمولة تشغيلية بسيطة على
+                                التذكرة.
+                            </li>
+                            <li><i class="fas fa-building" style="color: var(--success);"></i>
+                                <strong>عائد الوزارة (مجاناً):</strong> تقليص فرص التهرب الضريبي بشكل جذري من خلال
+                                الأتمتة الكاملة لجميع التعاملات المالية.
+                            </li>
+                            <li><i class="fas fa-gavel" style="color: var(--success);"></i>
+                                <strong>عائد تنظيمي (مجاناً):</strong> حوكمة القطاع وإحصاءات دقيقة لحظية دون أي تكلفة
+                                إضافية.
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "لنجاح المنظومة، نحتاج قرارين من معاليكم: اعتماد التذكرة الإلكترونية كبديل قانوني، ودعم إلزاميّة
-                الانضمام. في المقابل نضمن سيادة الدولة الكاملة على هذه البيانات وحمايتها داخلياً."
+                معالي الوزير، ندرك تماماً أعباء الميزانية الحكومية في هذه المرحلة، لذلك صممنا نموذج عمل بتكلفة صفرية على
+                الوزارة. لن تتكلف الوزارة ليرة واحدة على التطوير أو الاستضافة أو الصيانة. نحن كمستثمرين نتحمل ذلك
+                بالكامل، ونحقق عائدنا من اشتراكات الشركات. في المقابل تجني الوزارة تقليص التسرب الضريبي الجذري عبر
+                الأتمتة الكاملة لجميع المعاملات المالية في القطاع، إضافة إلى حوكمة تنظيمية شاملة وبيانات لحظية دقيقة.
             </div>
         </div>
 
 
-        <!-- Slide 12: Implementation Plan -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 12: القرارات المرجوة (The Ask)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide12">
             <div class="content-card">
-                <h2>الخطة التفصيلية للتنفيذ (Milestones)</h2>
-                <div
-                    style="margin-top: 2rem; text-align: right; position: relative; border-right: 2px solid var(--accent); padding-right: 2rem;">
-                    <div style="margin-bottom: 1.5rem; position: relative;">
-                        <div
-                            style="position: absolute; right: -2.6rem; top: 0; background: var(--bg); border: 2px solid var(--accent); border-radius: 50%; width: 1.2rem; height: 1.2rem;">
-                        </div>
-                        <h4 style="color: var(--accent); margin: 0; font-size: 1.2rem;">الربع الأول 2026: التشغيل
-                            التجريبي والمحدود</h4>
-                        <p style="margin: 0.5rem 0; opacity: 0.9;">إطلاق في كراج محدد مع عدد من الشركات. <em>الفريق:
-                                مهندسو الشركة + إشراف إداري محلي.</em></p>
+                <h2 class="anim" style="--anim-order: 0">القرارات المرجوة والإطار التنظيمي (The Ask)</h2>
+                <div class="ask-grid">
+                    <div class="ask-card ask-card--gold anim" style="--anim-order: 1">
+                        <h3><i class="fas fa-gavel"></i> الاعتماد الحصري المؤقت</h3>
+                        <p>
+                            1. اعتماد «Bus App» كمنصة حجز ورقابة رسمية معتمدة حصرياً <strong>(لمدة 3-5 سنوات لحماية
+                                استثمارنا).</strong><br>
+                            2. <strong>إلزامية التذاكر الإلكترونية:</strong> منع الانطلاق من الكراجات دون المانيفست
+                            الرقمي المعتمد.
+                        </p>
                     </div>
-                    <div style="margin-bottom: 1.5rem; position: relative;">
-                        <div
-                            style="position: absolute; right: -2.6rem; top: 0; background: var(--bg); border: 2px solid var(--gold); border-radius: 50%; width: 1.2rem; height: 1.2rem;">
-                        </div>
-                        <h4 style="color: var(--gold); margin: 0; font-size: 1.2rem;">الربع الثالث 2026: التنظيم
-                            والاعتماد الشامل</h4>
-                        <p style="margin: 0.5rem 0; opacity: 0.9;">إصدار تعميم وزاري يفرض النظام لترخيص نقل الركاب.
-                            تدريب كادر التفتيش الحكومي.</p>
-                    </div>
-                    <div style="position: relative;">
-                        <div
-                            style="position: absolute; right: -2.6rem; top: 0; background: var(--bg); border: 2px solid var(--success); border-radius: 50%; width: 1.2rem; height: 1.2rem;">
-                        </div>
-                        <h4 style="color: var(--success); margin: 0; font-size: 1.2rem;">عام 2027: السيادة الرقمية
-                            الكاملة</h4>
-                        <p style="margin: 0.5rem 0; opacity: 0.9;">التوسع لجميع المحافظات. الربط الآلي مع بيانات الأمن
-                            الجنائي والتأمينات الاجتماعية.</p>
+                    <div class="ask-card ask-card--accent anim" style="--anim-order: 2">
+                        <h3><i class="fas fa-shield-alt"></i> سيادة الخصوصية والبيانات</h3>
+                        <p>
+                            – <strong>الملكية:</strong> بيانات الركاب وحركة النقل هي <strong>ملك سيادي لوزارة النقل
+                                والدولة فقط.</strong><br>
+                            – <strong>دورنا:</strong> نحن كمشروع خاص نوفر فقط «البنية التحتية التقنية» للوصول إليها، مما
+                            يحمي الأمن السيبراني الوطني.
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "التحول لن يكون صادماً. خطتنا تعتمد التدرج: نبدأ بنموذج مصغر لاكتشاف التحديات الميدانية، ثم نطلق التعميم
-                الوزاري لضم البقية، ثم نتوسع لتشكيل القاعدة البيانية الوطنية الشاملة."
+                بما أننا كمستثمرين نتحمل كامل تكاليف البناء والتشغيل، نطلب من معاليكم قرارين أساسيين. الأول: الاعتماد
+                الحصري المؤقت لمدة ثلاث إلى خمس سنوات لحماية استثمارنا من التطبيقات غير المنظمة، مع إلزامية التذاكر
+                الإلكترونية كشرط للانطلاق. الثاني: التأكيد على أن بيانات الركاب وحركة النقل هي ملك سيادي حصري لوزارة
+                النقل والدولة السورية. نحن كمشروع خاص نقدم البنية التحتية التقنية فحسب. هذا يضمن شراكة ناجحة بأعلى
+                معايير السيادة والحوكمة.
             </div>
         </div>
 
 
-        <!-- Slide 13: Risk Assessment -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 13: خطة التنفيذ (Timeline تفاعلي)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide13">
             <div class="content-card">
-                <h2>إدارة المخاطر والتقييم (Risk Matrix)</h2>
-                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem;">
-                    <div class="pain-card"
-                        style="display: flex; gap: 1.5rem; align-items: center; padding: 1.2rem; border-color: rgba(255, 99, 132, 0.5); text-align: right;">
-                        <i class="fas fa-users-slash"
-                            style="color: #ff6b6b; font-size: 2.5rem; padding-right: 0.5rem;"></i>
-                        <div>
-                            <h4 style="margin: 0 0 0.5rem 0; color: #ff6b6b; font-size: 1.1rem;">خطر 1: مقاومة التغيير
-                                من المكاتب والشركات</h4>
-                            <p style="margin: 0; opacity: 0.85;"><strong>خطة الاستجابة (Plan B):</strong> إعطاء فترة
-                                سماح، يتبعها ربط إلزامي للترخيص السنوي باستخدام المنظومة الوطنية.</p>
+                <h2 class="anim" style="--anim-order: 0">الخطة التفصيلية للتنفيذ (Milestones)</h2>
+                <p class="anim" style="--anim-order: 1">اضغط على أي مرحلة لاستعراض تفاصيلها:</p>
+                <div class="timeline-interactive anim" style="--anim-order: 2">
+                    <div class="timeline-track" id="timelineTrack">
+                        <div class="timeline-node active" onclick="activateTimelineNode(1)">
+                            <div class="timeline-dot">1</div>
+                            <div class="timeline-detail">
+                                <h4 style="color: var(--accent);">الربع الأول 2026: التشغيل التجريبي</h4>
+                                <p>إطلاق النظام في كراج محدد مع عدد من الشركات لاختبار الأداء الميداني وجمع الملاحظات.
+                                </p>
+                                <p class="timeline-executor"><i class="fas fa-users-cog"></i> الجهة المنفذة: فريقنا
+                                    التقني بالكامل دون أي أعباء على كوادر الوزارة.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="pain-card"
-                        style="display: flex; gap: 1.5rem; align-items: center; padding: 1.2rem; border-color: rgba(255, 206, 86, 0.5); text-align: right;">
-                        <i class="fas fa-wifi"
-                            style="color: var(--gold); font-size: 2.5rem; padding-right: 0.5rem;"></i>
-                        <div>
-                            <h4 style="margin: 0 0 0.5rem 0; color: var(--gold); font-size: 1.1rem;">خطر 2: انقطاع
-                                الإنترنت أو الأعطال التقنية</h4>
-                            <p style="margin: 0; opacity: 0.85; line-height: 1.6;"><strong>خطة الاستجابة
-                                    الأولية:</strong> تصميم التطبيقات للعمل بلا إنترنت (Offline First) والمزامنة
-                                لاحقاً.<br><strong>استثمار وزاري:</strong> إتاحة نطاق إنترنت عالي السرعة في الكراجات كـ
-                                "خدمة مأجورة" للشركات لضمان جودة السيرفرات وزيادة إيرادات الوزارة.</p>
+                        <div class="timeline-node" onclick="activateTimelineNode(2)">
+                            <div class="timeline-dot">2</div>
+                            <div class="timeline-detail">
+                                <h4 style="color: var(--gold);">الربع الثالث 2026: التنظيم والاعتماد</h4>
+                                <p>إصدار تعميم وزاري يعتمد النظام رسمياً. تدريب كادر التفتيش الحكومي مجاناً على أدوات
+                                    الرقابة الرقمية.</p>
+                                <p class="timeline-executor"><i class="fas fa-users-cog"></i> التدريب والدعم الفني على
+                                    عاتقنا بالكامل.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="pain-card"
-                        style="display: flex; gap: 1.5rem; align-items: center; padding: 1.2rem; border-color: rgba(75, 192, 192, 0.5); text-align: right;">
-                        <i class="fas fa-user-lock"
-                            style="color: var(--success); font-size: 2.5rem; padding-right: 0.5rem;"></i>
-                        <div>
-                            <h4 style="margin: 0 0 0.5rem 0; color: var(--success); font-size: 1.1rem;">خطر 3: ضعف الوعي
-                                التقني للكوادر</h4>
-                            <p style="margin: 0; opacity: 0.85;"><strong>خطة الاستجابة:</strong> تطبيق واجهات بديهية
-                                جداً، مع تخصيص فرق دعم تقني لتأهيل موظفي الشركات والوزارة ميدانياً.</p>
+                        <div class="timeline-node" onclick="activateTimelineNode(3)">
+                            <div class="timeline-dot">3</div>
+                            <div class="timeline-detail">
+                                <h4 style="color: var(--success);">عام 2027: السيادة الرقمية الكاملة</h4>
+                                <p>التوسع لجميع المحافظات. الربط الآلي لبيانات الوزارة مع الجهات المعنية عبر بنيتنا
+                                    التحتية.</p>
+                                <p class="timeline-executor"><i class="fas fa-users-cog"></i> تغطية شاملة لجميع خطوط
+                                    النقل في سورية.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "بصفتكم صانع قرار، نعرض عليكم المخاطر بواقعية. المقاومة البشرية نتجاوزها بالغطاء القانوني، وانقطاع
-                الإنترنت ببرمجيات تعمل Offline، وضعف الخبرة بواجهات شديدة التبسيط."
+                التحول لن يكون مفاجئاً أو مرهقاً لكوادر الوزارة. وضعنا خطة تنفيذية من ثلاث مراحل واضحة. نبدأ بالتشغيل
+                التجريبي المحدود في كراج واحد لإثبات الجدوى. بعد إصدار التعميم الوزاري، يقوم فريقنا بتدريب موظفي التفتيش
+                الحكومي مجاناً. وبنهاية عام 2027 نصل إلى التغطية الشاملة لجميع المحافظات. جميع الخطوات التنفيذية
+                الميدانية يتولاها فريقنا بالكامل.
             </div>
         </div>
 
 
-        <!-- Slide 14: Conclusion -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 14: إدارة المخاطر (Flip Cards)
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide14">
-            <div class="content-card" style="text-align: center;">
-                <h2>الخلاصة والمخرجات</h2>
-                <p style="font-size: 2rem; color: var(--gold); margin: 3rem 0;">من "التخبط الورقي" إلى "الحوكمة الرقمية
-                    المؤسسية"</p>
-                <div
-                    style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.5rem; display: inline-block;">
-                    <p style="margin: 0; font-size: 1.2rem;">Bus App: بنية تحتية رقمية وطنية جاهزة لخدمة المواطن، حماية
-                        الوزارة، ودعم الاقتصاد.</p>
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order: 0">إدارة المخاطر والتقييم (Risk Matrix)</h2>
+                <div class="flip-grid">
+                    <div class="flip-card flip-card--red anim" style="--anim-order: 1" onclick="flipCard(this)">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <i class="fas fa-users-slash"></i>
+                                <h3>مقاومة التغيير</h3>
+                                <p>رفض المكاتب والشركات التقليدية</p>
+                                <span class="flip-hint"><i class="fas fa-sync-alt"></i> اضغط لرؤية الحل</span>
+                            </div>
+                            <div class="flip-card-back">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>خطة الاستجابة</h3>
+                                <p>إعطاء فترة سماح، يتبعها ربط إلزامي للترخيص السنوي باستخدام المنظومة الوطنية.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card flip-card--yellow anim" style="--anim-order: 2" onclick="flipCard(this)">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <i class="fas fa-wifi"></i>
+                                <h3>انقطاع الإنترنت</h3>
+                                <p>أعطال تقنية وضعف البنية التحتية</p>
+                                <span class="flip-hint"><i class="fas fa-sync-alt"></i> اضغط لرؤية الحل</span>
+                            </div>
+                            <div class="flip-card-back">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>خطة الاستجابة</h3>
+                                <p>تصميم التطبيقات للعمل بلا إنترنت (Offline First) والمزامنة لاحقاً عند عودة الاتصال.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card flip-card--green anim" style="--anim-order: 3" onclick="flipCard(this)">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <i class="fas fa-user-lock"></i>
+                                <h3>ضعف الوعي التقني</h3>
+                                <p>صعوبة التعامل مع التقنية لدى الكوادر</p>
+                                <span class="flip-hint"><i class="fas fa-sync-alt"></i> اضغط لرؤية الحل</span>
+                            </div>
+                            <div class="flip-card-back">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>خطة الاستجابة</h3>
+                                <p>واجهات بديهية مصممة للبساطة القصوى، مع فرق دعم تقني ميداني لتأهيل الكوادر.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <p class="flip-instruction anim" style="--anim-order: 4"><i class="fas fa-hand-pointer"></i> اضغط على أي
+                    بطاقة لرؤية خطة الاستجابة</p>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "معالي الوزير، Bus App هو الحل المؤسسي الذي ينقل قطاع النقل المعني بالتدفق المالي والبشري الهائل ليواكب
-                العصر الإداري الحديث. نحن جاهزون للتنفيذ وتلبية تطلعاتكم."
+                بصفتكم صانع قرار، نعرض عليكم المخاطر بواقعية وشفافية تامة. حددنا ثلاثة مخاطر رئيسية ولكل منها خطة
+                استجابة جاهزة. المقاومة البشرية للتغيير نتجاوزها بفترة سماح تتبعها إلزامية مرتبطة بالترخيص. مشكلة انقطاع
+                الإنترنت المتكررة حلها تقني بتصميم التطبيقات للعمل دون اتصال. وضعف الخبرة التقنية نعالجه بواجهات مصممة
+                لأقصى درجات البساطة، مع فرق دعم ميداني مباشر. اضغط على أي بطاقة لرؤية التفاصيل.
             </div>
         </div>
 
 
-        <!-- Slide 15: Ending -->
+        <!-- ═══════════════════════════════════════════
+             SLIDE 15: الخلاصة والمخرجات
+             ═══════════════════════════════════════════ -->
         <div class="slide" id="slide15">
-            <div class="content-card" style="text-align: center;">
-                <h1 style="color: var(--gold); font-size: 3rem; margin-bottom: 2rem;">جاهزون للانطلاق</h1>
-                <p style="font-size: 1.2rem;">نحن في خدمتكم لأي توضيح أو لإجراء عرض ميداني حي</p>
-                <div class="qr-core"
-                    onclick="this.innerHTML='<i class=\'fas fa-check-circle\' style=\'color: var(--success);\'></i>'; setTimeout(()=>this.innerHTML='QR', 2000);">
+            <div class="content-card text-center">
+                <h2 class="anim" style="--anim-order: 0">الخلاصة والمخرجات</h2>
+                <div class="conclusion-grid">
+                    <div class="conclusion-point anim" style="--anim-order: 1">
+                        <i class="fas fa-user-check" style="color: var(--accent);"></i>
+                        <h3>للمواطن</h3>
+                        <p>حجز مريح، شفاف، وآمن من أي مكان</p>
+                    </div>
+                    <div class="conclusion-point anim" style="--anim-order: 2">
+                        <i class="fas fa-landmark" style="color: var(--gold);"></i>
+                        <h3>للوزارة</h3>
+                        <p>حوكمة رقمية كاملة وبيانات لحظية</p>
+                    </div>
+                    <div class="conclusion-point anim" style="--anim-order: 3">
+                        <i class="fas fa-building" style="color: var(--success);"></i>
+                        <h3>للشركات</h3>
+                        <p>حماية الإيرادات وأتمتة العمليات</p>
+                    </div>
+                </div>
+                <div class="conclusion-motto anim" style="--anim-order: 4">
+                    من «التخبط الورقي» إلى «الحوكمة الرقمية المؤسسية»
+                </div>
+                <p class="anim" style="--anim-order: 5">Bus App: بنية تحتية رقمية وطنية جاهزة لخدمة المواطن، حماية
+                    الوزارة، ودعم الاقتصاد.</p>
+            </div>
+            <div class="speaker-note-data" style="display:none;">
+                في الخلاصة، منظومة Bus App ليست مجرد تطبيق حجز، بل هي مشروع تحول رقمي مؤسسي يخدم ثلاثة أطراف: المواطن
+                الذي يحصل على خدمة نقل محترمة وشفافة، الوزارة التي تحصل على حوكمة رقمية كاملة وبيانات لحظية دقيقة لصنع
+                القرار، وشركات النقل التي تحمي إيراداتها وتقفز نحو الاحترافية. كل ذلك بنموذج شراكة لا يكلف ميزانية
+                الدولة شيئاً. نحن جاهزون للتنفيذ ونتطلع لدعمكم التنظيمي لإطلاق هذا المشروع الوطني.
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════════
+             SLIDE 16: الختام والتواصل
+             ═══════════════════════════════════════════ -->
+        <div class="slide" id="slide16">
+            <div class="content-card text-center">
+                <h1 class="gradient-text anim" style="--anim-order: 0; font-size: 3rem; margin-bottom: 2rem;">جاهزون
+                    للانطلاق</h1>
+                <p class="anim" style="--anim-order: 1; font-size: 1.2rem;">نحن في خدمتكم لأي توضيح أو لإجراء عرض ميداني
+                    حي على أرض الواقع</p>
+                <div class="qr-core anim" style="--anim-order: 2">
                     QR
                 </div>
-                <p style="font-size: 1rem;">(Bus App System)</p>
+                <p class="anim" style="--anim-order: 3">(Bus App System)</p>
             </div>
             <div class="speaker-note-data" style="display:none;">
-                "أشكركم نيابة عن فريق العمل. نحن مستعدون للإجابة على أي أسئلة وإجراء عرض ميداني حي لاختبار جودة البرنامج
-                وسهولة استخدامه على أرض الواقع."
+                أشكركم معالي الوزير والسادة الحضور على حسن الاستماع وسعة الصدر. نحن مستعدون تماماً للإجابة على أي أسئلة
+                أو استفسارات. كما يسعدنا دعوتكم لإجراء عرض ميداني حي في أي كراج تختارونه لاختبار جودة المنظومة وسهولة
+                استخدامها على أرض الواقع. نتطلع لبدء هذه الشراكة الاستراتيجية معكم لخدمة المواطن السوري والارتقاء بقطاع
+                النقل البري.
             </div>
         </div>
 
+
+        <!-- Navigation Controls -->
         <div class="nav-controls">
-            <button class="nav-btn" onclick="prevSlide()" title="السابق (سهم يمين)"><i class="fas fa-chevron-right"
-                    style="margin-left: 5px;"></i> السابق</button>
-            <button class="nav-btn" onclick="nextSlide()" title="التالي (سهم يسار)">التالي <i
-                    class="fas fa-chevron-left" style="margin-right: 5px;"></i></button>
+            <button class="nav-btn" onclick="prevSlide()" title="السابق (سهم يمين)">
+                <i class="fas fa-chevron-right" style="margin-left: 5px;"></i> السابق
+            </button>
+            <button class="nav-btn" onclick="nextSlide()" title="التالي (سهم يسار)">
+                التالي <i class="fas fa-chevron-left" style="margin-right: 5px;"></i>
+            </button>
         </div>
     </div>
 
-    <script>
-        let currentSlide = 1;
-        const totalSlides = 15;
-        let notesVisible = false;
-
-        const roleData = {
-            citizen: {
-                title: 'أثر المنظومة على المواطن',
-                pain: ['وقت انتظار طويل وغير مؤكد', 'عشوائية في الأسعار والمواصفات', 'انعدام الراحة والأمان في الكراجات'],
-                causes: ['الازدحام والتدافع العشوائي', 'الاستغلال المادي من السماسرة'],
-                solutions: ['حجز فوري من المنزل بلمسة واحدة', 'أسعار رسمية ثابتة وشفافة', 'معرفة دقيقة بمواعيد الانطلاق والوصول']
-            },
-            company: {
-                title: 'أثر المنظومة على شركات النقل',
-                pain: ['سرقة "الجباية" المتكررة وصعوبة التدقيق', 'غياب البيانات الإحصائية للرحلات', 'صعوبة تتبع أداء السائقين'],
-                causes: ['خسائر مالية كبيرة وتدني الأرباح', 'صعوبة التخطيط للتوسع في الأسطول'],
-                solutions: ['تتبع مالي وإيرادات موثقة لحظة بلحظة', 'تقارير أداء ذكية لرفع الكفاءة التشغيلية', 'إدارة متكاملة للحافلات والسائقين رقمياً']
-            },
-            state: {
-                title: 'أثر المنظومة على وزارة النقل (الدولة)',
-                pain: ['غياب الرؤية البيانية عن قطاع النقل', 'صعوبة الرقابة على التزام الشركات', 'هدر الموارد والدعم الحكومي'],
-                causes: ['عدم القدرة على التخطيط الاستراتيجي', 'استياء المواطنين من جودة الخدمات العامة'],
-                solutions: ['أرشيف وطني موحد لحركة النقل والركاب', 'رقابة مركزية وفورية على جميع الخطوط', 'قرارات تخطيطية مبنية على حقائق وبيانات']
-            }
-        };
-
-        function showImpact(role) {
-            const data = roleData[role];
-            document.getElementById('impactTitle').innerText = data.title;
-            document.getElementById('impactPain').innerHTML = data.pain.map(i => `<li>${i}</li>`).join('');
-            document.getElementById('impactCauses').innerHTML = data.causes.map(i => `<li>${i}</li>`).join('');
-            document.getElementById('impactSolutions').innerHTML = data.solutions.map(i => `<li>${i}</li>`).join('');
-
-            document.getElementById('impactOverlay').classList.add('active');
-        }
-
-        document.getElementById('closeImpact').addEventListener('click', () => {
-            document.getElementById('impactOverlay').classList.remove('active');
-        });
-
-        function updateSlide() {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(s => s.classList.remove('active'));
-            const activeSlide = slides[currentSlide - 1];
-            if (activeSlide) {
-                activeSlide.classList.add('active');
-
-                // Update Speaker Notes
-                const noteData = activeSlide.querySelector('.speaker-note-data');
-                document.getElementById('notesContent').innerHTML = noteData ? noteData.innerText : 'لا توجد ملاحظات لهذه الشريحة.';
-            }
-
-            const progress = (currentSlide / totalSlides) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-
-        // Tech Simulator Scan (Slide 4)
-        function simulateScan(el) {
-            el.classList.add('scanning');
-            setTimeout(() => {
-                el.classList.remove('scanning');
-                el.style.borderColor = 'var(--success)';
-                const icon = el.querySelector('i');
-                const oldClass = icon.className;
-                icon.className = 'fas fa-check-circle';
-                setTimeout(() => {
-                    icon.className = oldClass;
-                    el.style.borderColor = 'transparent';
-                }, 1500);
-            }, 2000);
-        }
-
-        // Timeline Activation (Slide 8)
-        function activateTimeline(el) {
-            document.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        function toggleNotes() {
-            notesVisible = !notesVisible;
-            document.getElementById('notesPanel').classList.toggle('visible', notesVisible);
-        }
-
-        document.getElementById('notesToggle').addEventListener('click', toggleNotes);
-
-        function nextSlide() {
-            if (currentSlide < totalSlides) {
-                currentSlide++;
-                updateSlide();
-            }
-        }
-
-        function prevSlide() {
-            if (currentSlide > 1) {
-                currentSlide--;
-                updateSlide();
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') nextSlide();
-            if (e.key.toLowerCase() === 'n') toggleNotes();
-            if (e.key === 'Escape') document.getElementById('impactOverlay').classList.remove('active');
-        });
-
-        updateSlide();
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>
