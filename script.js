@@ -49,10 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'tech': SlideRenderer._tech,
                 'architecture': SlideRenderer._architecture,
                 'compliance': SlideRenderer._compliance,
-                'finance': SlideRenderer._finance,
                 'ask': SlideRenderer._ask,
                 'timeline': SlideRenderer._timeline,
-                'risks': SlideRenderer._risks,
                 'conclusion': SlideRenderer._conclusion,
                 'closing': SlideRenderer._closing,
             };
@@ -69,13 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
         static _title(d) {
             return `
             <div class="content-card text-center">
-                <p class="slide-republic anim" style="--anim-order:0">${d.republic}</p>
                 <h1 class="anim" style="--anim-order:1">${d.mainTitle}<br>
                     <span class="gradient-text">${d.accentTitle}</span>
                 </h1>
                 <p class="anim" style="--anim-order:2">${d.description}</p>
                 <div class="slide-footer anim" style="--anim-order:3">
-                    <p class="presenter-name">${d.presenter}</p>
                     <p class="date-text">${d.date}</p>
                 </div>
             </div>`;
@@ -228,32 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
         }
 
-        static _finance(d) {
-            const c = d.costCard;
-            const r = d.revenueCard;
-            const costPoints = c.points.map(p =>
-                `<li><i class="fas fa-check-circle" style="color:var(--success);"></i> ${p}</li>`).join('');
-            const revPoints = r.points.map(p =>
-                `<li><i class="${p.icon}" style="color:${p.color};"></i> <strong>${p.title}</strong> ${p.text}</li>`).join('');
-            return `
-            <div class="content-card">
-                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
-                <div class="finance-grid">
-                    <div class="finance-card finance-card--cost anim" style="--anim-order:1">
-                        <h3><i class="fas fa-coins"></i> ${c.title}</h3>
-                        <div class="zero-cost">
-                            <div class="zero-cost-number">${c.value} <span class="zero-cost-unit">${c.unit}</span></div>
-                            <p class="zero-cost-label">${c.label}</p>
-                        </div>
-                        <ul class="finance-list">${costPoints}</ul>
-                    </div>
-                    <div class="finance-card finance-card--revenue anim" style="--anim-order:2">
-                        <h3><i class="fas fa-chart-bar"></i> ${r.title}</h3>
-                        <ul class="finance-list">${revPoints}</ul>
-                    </div>
-                </div>
-            </div>`;
-        }
+
 
         static _ask(d) {
             const colorMap = { gold: 'ask-card--gold', accent: 'ask-card--accent' };
