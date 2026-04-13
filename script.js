@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'tech': SlideRenderer._tech,
                 'architecture': SlideRenderer._architecture,
                 'compliance': SlideRenderer._compliance,
+                'partnership': SlideRenderer._partnership,
                 'ask': SlideRenderer._ask,
                 'timeline': SlideRenderer._timeline,
                 'conclusion': SlideRenderer._conclusion,
@@ -225,6 +226,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
 
+
+        static _partnership(d) {
+            const cards = d.items.map((item, i) => {
+                let colorClass = '';
+                if (item.color && item.color.includes('gold')) colorClass = 'ask-card--gold';
+                if (item.color && item.color.includes('accent')) colorClass = 'ask-card--accent';
+
+                return `
+                <div class="ask-card ${colorClass} anim" style="--anim-order:${i + 1}">
+                    <h3><i class="${item.icon}" style="color:${item.color || 'inherit'}"></i> ${item.title}</h3>
+                    <p>${item.text}</p>
+                </div>`;
+            }).join('');
+            return `
+            <div class="content-card">
+                <h2 class="anim" style="--anim-order:0">${d.title}</h2>
+                <div class="ask-grid">${cards}</div>
+            </div>`;
+        }
 
         static _ask(d) {
             const colorMap = { gold: 'ask-card--gold', accent: 'ask-card--accent' };
